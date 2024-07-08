@@ -1,4 +1,5 @@
-﻿using ChoCin.Server.Models.User;
+﻿using ChoCin.Server.Helpers;
+using ChoCin.Server.Models.User;
 using ChoCin.Server.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,6 +7,7 @@ namespace ChoCin.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly UserService _userService;

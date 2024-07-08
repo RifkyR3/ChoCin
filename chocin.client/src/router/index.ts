@@ -40,11 +40,13 @@ router.beforeEach(async (to, from, next) => {
         }
     }*/
 
-    if (to.meta.requiresAuth ) {
+    let logedin = false;
+
+    if (to.meta.requiresAuth && !logedin) {
         return next('/login');
     }
 
-    if (to.meta.requiresUnauth ) {
+    if (to.meta.requiresUnauth && logedin) {
         return next('/');
     }
 
