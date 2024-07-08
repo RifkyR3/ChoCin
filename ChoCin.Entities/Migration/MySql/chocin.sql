@@ -1,0 +1,6 @@
+CREATE TABLE c_user (
+  UserId INT (20) NOT NULL AUTO_INCREMENT,
+  UserName VARCHAR (255),
+  UserPassword VARCHAR (255),
+  PRIMARY KEY (UserId)
+);
