@@ -4,6 +4,7 @@ import './index.scss';
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
+import { createPinia } from 'pinia'
 
 import * as bootstrap from 'bootstrap';
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -30,9 +31,11 @@ const options: PluginOptions = {
     rtl: false
 };
 
+const pinia = createPinia()
 const app = createApp(App);
 app.component('font-awesome-icon', FontAwesomeIcon)
     .use(router)
+    .use(pinia)
     .use(Toast, options)
     .use(ProfabricComponents);
 

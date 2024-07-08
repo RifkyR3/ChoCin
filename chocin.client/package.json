@@ -20,6 +20,8 @@
     "@profabric/vue-components": "^0.2.4",
     "@types/bootstrap": "^5.2.10",
     "bootstrap": "^5.3.3",
+    "pinia": "^2.1.7",
+    "vee-validate": "^4.13.2",
     "vue": "^3.4.29",
     "vue-facing-decorator": "^3.0.4",
     "vue-router": "^4.4.0",

@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="src\components\" />
+    <Folder Include="src\stores\" />
     <Folder Include="src\router\" />
   </ItemGroup>
 </Project>

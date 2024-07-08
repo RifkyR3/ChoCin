@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
+import { useAuthStore } from '@/stores'
 
 import Login from '../modules/Login.vue';
 import Base from '../modules/tmp/Base.vue';
@@ -40,7 +41,8 @@ router.beforeEach(async (to, from, next) => {
         }
     }*/
 
-    let logedin = false;
+    const auth = useAuthStore()
+    let logedin = auth.authenticate;
 
     if (to.meta.requiresAuth && !logedin) {
         return next('/login');

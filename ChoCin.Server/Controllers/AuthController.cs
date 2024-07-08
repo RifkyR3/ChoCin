@@ -15,14 +15,14 @@ namespace ChoCin.Server.Controllers
         }
 
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate(JwtLoginFormModel model)
+        public async Task<ActionResult<JwtAuthResponse>> Authenticate(JwtLoginFormModel model)
         {
             var response = await _authService.Authenticate(model);
 
             if (response == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 
-            return Ok(response);
+            return response;
         }
     }
 }

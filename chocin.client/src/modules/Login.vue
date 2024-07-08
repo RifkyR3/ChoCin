@@ -1,19 +1,40 @@
+<script lang="ts" setup>
+    import { Field, Form } from 'vee-validate'
+    import * as Yup from 'yup'
+    import { useAuthStore } from '@/stores'
+    import { defineComponent } from 'vue';
+
+    var store = {
+        username: '',
+        password: ''
+    };
+
+    function onSubmit() {
+        const authStore = useAuthStore()
+
+        return authStore.login(store.username, store.password);
+    }
+</script>
 <template>
     <div class="login-page bg-body-secondary">
         <div class="login-box">
-            <div class="login-logo"> <b>Admin</b>LTE </div> <!-- /.login-logo -->
+            <div class="login-logo"> <b>Admin</b>LTE </div>
+
             <div class="card">
                 <div class="card-body login-card-body">
                     <p class="login-box-msg">Sign in to start your session</p>
-                    <form action="../index3.html" method="post">
+
+                    <form @submit.prevent="onSubmit">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Username">
+                            <input type="text" name="username" v-model="store.username" class='form-control' />
                             <div class="input-group-text"> <span class="bi bi-envelope"></span> </div>
                         </div>
+
                         <div class="input-group mb-3">
-                            <input type="password" class="form-control" placeholder="Password">
+                            <input type="password" name="password" v-model="store.password" class='form-control' />
                             <div class="input-group-text"> <span class="bi bi-lock-fill"></span> </div>
-                        </div> <!--begin::Row-->
+                        </div> 
+                        
                         <div class="row">
                             <div class="col-8">
                                 <div class="form-check">
@@ -21,11 +42,14 @@
                                         Remember Me
                                     </label>
                                 </div>
-                            </div> <!-- /.col -->
+                            </div> 
+                            
                             <div class="col-4">
                                 <div class="d-grid gap-2"> <button type="submit" class="btn btn-primary">Sign In</button> </div>
-                            </div> <!-- /.col -->
-                        </div> <!--end::Row-->
+                            </div> 
+                            
+                        </div> 
+                        
                     </form>
                     <p class="mb-1"> <a href="forgot-password.html">I forgot my password</a> </p>
                     <p class="mb-0">
@@ -38,6 +62,3 @@
         </div>
     </div>
 </template>
-<script lang="ts">
-
-</script>

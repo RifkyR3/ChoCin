@@ -39,6 +39,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),
+            '@stores': path.resolve(__dirname, 'resources/js/stores'),
             '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
             '~admin-lte': path.resolve(__dirname, 'node_modules/admin-lte'),
         }
