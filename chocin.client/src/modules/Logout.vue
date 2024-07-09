@@ -14,7 +14,7 @@
 
         methods : {
 
-            async fetchData(): void {
+            async fetchData() {
                 let auth = useAuthStore();
                 await auth.logout();
             }

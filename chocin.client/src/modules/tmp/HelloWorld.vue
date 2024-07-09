@@ -66,14 +66,14 @@
             '$route': 'fetchData'
         },
         methods: {
-            async fetchData(): void {
+            async fetchData() {
                 this.post = null;
                 this.loading = true;
 
-                let token: string = useAuthStore().token;
-                console.log(token);
+                const token: string = await useAuthStore().getToken();
+                
                 api.setAuthToken(token);
-                let test : UserModel[] = await api.getListUser();
+                const test : UserModel[] = await api.getListUser();
                 console.log(test);
 
                 await fetch('weatherforecast')

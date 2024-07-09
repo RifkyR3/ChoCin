@@ -1,8 +1,5 @@
 <script lang="ts" setup>
-    import { Field, Form } from 'vee-validate'
-    import * as Yup from 'yup'
     import { useAuthStore } from '@/stores'
-    import { defineComponent } from 'vue';
 
     var store = {
         username: '',

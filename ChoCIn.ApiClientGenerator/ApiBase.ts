@@ -1,8 +1,7 @@
 export class ApiBase {
-	private authToken;
+	private authToken : string = '';
 
-	protected constructor(token: string = 'the-authentication-token') {
-		this.authToken = token;
+	protected constructor() {
 	}
 
 	public setAuthToken(token: string) {
