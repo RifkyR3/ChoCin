@@ -8,12 +8,35 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
-export class Client {
+export class ApiBase {
+    private authToken;
+
+    protected constructor(token: string = 'the-authentication-token') {
+        this.authToken = token;
+    }
+
+    public setAuthToken(token: string) {
+        this.authToken = token;
+    }
+
+    protected transformOptions = (options: RequestInit): Promise<RequestInit> => {
+        if (this.authToken != '') {
+            options.headers = {
+                ...options.headers,
+                Authorization: this.authToken,
+            };
+        }
+        return Promise.resolve(options);
+    };
+}
+
+export class Client extends ApiBase {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        super();
         this.http = http ? http : window as any;
         this.baseUrl = baseUrl ?? "";
     }
@@ -37,7 +60,9 @@ export class Client {
             }
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
             return this.processAuthenticate(_response);
         });
     }
@@ -73,7 +98,9 @@ export class Client {
             }
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
             return this.processGetListUser(_response);
         });
     }
@@ -113,7 +140,9 @@ export class Client {
             }
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
             return this.processAddUser(_response);
         });
     }
@@ -150,7 +179,9 @@ export class Client {
             }
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
             return this.processGetUserById(_response);
         });
     }
@@ -193,7 +224,9 @@ export class Client {
             }
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
             return this.processUpdateUser(_response);
         });
     }
@@ -229,7 +262,9 @@ export class Client {
             }
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
             return this.processDeleteUser(_response);
         });
     }
@@ -263,7 +298,9 @@ export class Client {
             }
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
             return this.processGetWeatherForecast(_response);
         });
     }
@@ -319,7 +356,7 @@ export interface WeatherForecast {
 }
 
 export class ApiException extends Error {
-    message: string;
+    override message: string;
     status: number;
     response: string;
     headers: { [key: string]: any; };

@@ -32,7 +32,8 @@
 
 <script lang="ts">
     import { defineComponent } from 'vue';
-    import { Client , UserModel} from '../../webApi';
+    import { Client , type UserModel} from '../../helpers/webApi';
+    import { useAuthStore } from "../../stores";
 
     let api: Client = new Client();
 
@@ -69,7 +70,10 @@
                 this.post = null;
                 this.loading = true;
 
-                let test : UserModel = await api.getListUser();
+                let token: string = useAuthStore().token;
+                console.log(token);
+                api.setAuthToken(token);
+                let test : UserModel[] = await api.getListUser();
                 console.log(test);
 
                 await fetch('weatherforecast')

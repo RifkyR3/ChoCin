@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { useAuthStore } from '@/stores'
 
 import Login from '../modules/Login.vue';
+import Logout from '../modules/Logout.vue';
 import Base from '../modules/tmp/Base.vue';
 
 const routes: Array<RouteRecordRaw> = [
@@ -20,7 +21,15 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
             requiresUnauth: true
         }
-    }
+    },
+    {
+        path: '/logout',
+        name: 'Logout',
+        component: Logout,
+        meta: {
+            requiresAuth: true
+        }
+    },
 ];
 
 

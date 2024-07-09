@@ -35,8 +35,13 @@ async static Task GenerateTypeScriptClient(string url, string generatePath) =>
             };
 
             settings.TypeScriptGeneratorSettings.TypeStyle = TypeScriptTypeStyle.Interface;
-            settings.TypeScriptGeneratorSettings.TypeScriptVersion = 3.5M;
+            settings.TypeScriptGeneratorSettings.TypeScriptVersion = 4.3M;
             settings.TypeScriptGeneratorSettings.DateTimeType = TypeScriptDateTimeType.String;
+
+            settings.ClientBaseClass = "ApiBase";
+            settings.UseTransformOptionsMethod = true;
+            // settings.ConfigurationClass = "IConfig";
+            settings.TypeScriptGeneratorSettings.ExtensionCode = File.ReadAllText("./ApiBase.ts");
 
             var generator = new TypeScriptClientGenerator(document, settings);
             var code = generator.GenerateFile();

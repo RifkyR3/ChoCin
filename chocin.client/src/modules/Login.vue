@@ -9,10 +9,10 @@
         password: ''
     };
 
-    function onSubmit() {
+    async function onSubmit() {
         const authStore = useAuthStore()
 
-        return authStore.login(store.username, store.password);
+        return await authStore.login(store.username, store.password);
     }
 </script>
 <template>
