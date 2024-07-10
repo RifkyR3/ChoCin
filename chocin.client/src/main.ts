@@ -5,17 +5,14 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
 import { createPinia } from 'pinia'
-
 import * as bootstrap from 'bootstrap';
-import { library } from '@fortawesome/fontawesome-svg-core';
+
+import './main-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons';
 
 import { ProfabricComponents } from '@profabric/vue-components';
 import Toast, { type PluginOptions } from 'vue-toastification';
 
-
-library.add(faEnvelope, faLock);
 
 const options: PluginOptions = {
     timeout: 3000,

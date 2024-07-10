@@ -1,6 +1,4 @@
-﻿using ChoCin.Server.Models.User;
-
-namespace ChoCin.Server.Models.Auth
+﻿namespace ChoCin.Server.Models.Auth
 {
     public class JwtAuthResponse
     {

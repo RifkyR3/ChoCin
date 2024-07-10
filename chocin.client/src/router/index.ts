@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import { useAuthStore } from '@/stores'
 
-import Login from '../modules/Login.vue';
-import Logout from '../modules/Logout.vue';
+import { ErrorView, LoginView, LogoutView } from '../views';
 import Base from '../modules/tmp/Base.vue';
 
 const routes: Array<RouteRecordRaw> = [
@@ -17,7 +16,7 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/login',
         name: 'Login',
-        component: Login,
+        component: LoginView,
         meta: {
             requiresUnauth: true
         }
@@ -25,13 +24,18 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/logout',
         name: 'Logout',
-        component: Logout,
+        component: LogoutView,
         meta: {
             requiresAuth: true
         }
     },
-];
 
+    // otherwise redirect to home
+    { 
+        path: '/:pathMatch(.*)*', 
+        component: ErrorView
+    }
+];
 
 const router = createRouter({
     history: createWebHistory(),
@@ -39,19 +43,9 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-    /*let storedAuthentication = store.getters['auth/currentUser'];
-
-    if (!storedAuthentication) {
-        try {
-            storedAuthentication = await checkSession();
-            store.dispatch('auth/setCurrentUser', storedAuthentication);
-        } catch (error) {
-            console.error('Error checking session:', error);
-        }
-    }*/
 
     const auth = useAuthStore()
-    let logedin = auth.authenticate;
+    const logedin = auth.authenticate;
 
     if (to.meta.requiresAuth && !logedin) {
         return next('/login');

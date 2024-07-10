@@ -11,6 +11,7 @@ namespace ChoCin.Server.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserService _userService;
+
         public UserController(UserService userService)
         {
             this._userService = userService;

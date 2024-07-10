@@ -6,7 +6,8 @@ namespace ChoCin.Server.Services
 {
     public class UserService
     {
-        private protected ChocinDbContext dbContext;
+        protected ChocinDbContext dbContext;
+
         public UserService(ChocinDbContext dbContext)
         {
             this.dbContext = dbContext;

@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import router from '@/router';
 import { Client, type JwtAuthResponse, type JwtLoginFormModel } from '../helpers/webApi';
+import { useToast } from 'vue-toastification';
 
 const api: Client = new Client();
 
@@ -30,6 +31,7 @@ export const useAuthStore = defineStore('auth', {
 
                 return await router.push(this.returnUrl || '/')
             } catch (error) {
+                useToast().error("Please Try Again");
                 return error
             }
         },
@@ -39,15 +41,15 @@ export const useAuthStore = defineStore('auth', {
 
             localStorage.removeItem('auth')
             localStorage.removeItem('user')
-            localStorage.removeItem('token')
 
             return await router.push('/login')
         },
         async getToken() {
-            if(this.authenticate && this.user != null) {
+            if (this.authenticate && this.user != null) {
                 return this.user.token;
             }
 
+            useToast().warning("Your Session Expired. Please Signin Again.");
             return await this.logout();
         }
     }

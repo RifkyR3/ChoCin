@@ -1,9 +1,9 @@
-﻿using ChoCin.Server.Services;
-using ChoCin.Server.Models;
+﻿using ChoCin.Server.Models;
+using ChoCin.Server.Services;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
-using Microsoft.Extensions.Options;
 
 namespace ChoCin.Server.Helpers
 {

@@ -48,7 +48,8 @@ namespace ChoCin.Server.Services
             // authentication successful so generate jwt token
             var token = await generateJwtToken(user);
 
-            return new JwtAuthResponse {
+            return new JwtAuthResponse
+            {
                 FullName = tmpUser.UserFullName,
                 Username = tmpUser.UserName,
                 Id = tmpUser.UserId,
@@ -63,7 +64,6 @@ namespace ChoCin.Server.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = await Task.Run(() =>
             {
-
                 var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
@@ -79,7 +79,6 @@ namespace ChoCin.Server.Services
 
         private bool CheckingPassword(string enteredPasword, string hashedPassword)
         {
-
             bool valid = BCrypt.Net.BCrypt.Verify(enteredPasword, hashedPassword);
 
             return valid;

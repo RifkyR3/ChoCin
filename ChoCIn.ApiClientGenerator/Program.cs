@@ -7,7 +7,6 @@ using NSwag.CodeGeneration.TypeScript;
 
 Console.WriteLine("Hello, World!");
 
-
 if (args.Length != 3)
     throw new ArgumentException("Expecting 3 arguments: URL, generatePath, language");
 
