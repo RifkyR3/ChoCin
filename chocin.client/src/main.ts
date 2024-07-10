@@ -13,6 +13,8 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { ProfabricComponents } from '@profabric/vue-components';
 import Toast, { type PluginOptions } from 'vue-toastification';
 
+import DefaultLayout from './components/DefaultLayout.vue';
+import EmptyLayout from './components/EmptyLayout.vue';
 
 const options: PluginOptions = {
     timeout: 3000,
@@ -30,10 +32,12 @@ const options: PluginOptions = {
 
 const pinia = createPinia()
 const app = createApp(App);
-app.component('font-awesome-icon', FontAwesomeIcon)
+app.component('fa-icon', FontAwesomeIcon)
     .use(router)
     .use(pinia)
     .use(Toast, options)
     .use(ProfabricComponents);
 
+app.component('default-layout', DefaultLayout);
+app.component('empty-layout', EmptyLayout);
 app.mount('#app');

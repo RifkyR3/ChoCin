@@ -1,14 +1,13 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import { useAuthStore } from '@/stores'
 
-import { ErrorView, LoginView, LogoutView } from '../views';
-import Base from '../modules/tmp/Base.vue';
+import * as views from '../views';
 
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
         name: '',
-        component: Base,
+        component: views.DashboardView,
         meta: {
             requiresAuth: true
         }
@@ -16,24 +15,26 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: '/login',
         name: 'Login',
-        component: LoginView,
+        component: views.LoginView,
         meta: {
-            requiresUnauth: true
+            requiresUnauth: true,
+            layout: 'empty'
         }
     },
     {
         path: '/logout',
         name: 'Logout',
-        component: LogoutView,
+        component: views.LogoutView,
         meta: {
-            requiresAuth: true
+            requiresAuth: true,
+            layout: 'empty'
         }
     },
 
     // otherwise redirect to home
     { 
         path: '/:pathMatch(.*)*', 
-        component: ErrorView
+        component: views.ErrorView
     }
 ];
 
