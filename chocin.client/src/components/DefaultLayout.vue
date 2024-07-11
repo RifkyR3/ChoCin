@@ -1,5 +1,5 @@
 <template>
-    <div class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <div class="layout-fixed sidebar-expand-lg bg-body-tertiary " :class="useUiStore().sideBarState">
         <div class="app-wrapper">
             <TopBar />
             <SideBar />
@@ -11,4 +11,6 @@
 <script setup lang='ts'>
 import TopBar from "./TopBar.vue";
 import SideBar from "./SideBar.vue";
+
+import { useUiStore } from '@/stores'
 </script>

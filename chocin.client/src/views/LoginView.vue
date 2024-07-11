@@ -9,7 +9,7 @@ const schema = Yup.object().shape({
     password: Yup.string().required('Password is required')
 });
 
-async function onSubmit(values, { setErrors }) {
+async function onSubmit(values : any) {
     const { username, password } = values;
 
     const authStore = useAuthStore()
@@ -30,7 +30,7 @@ async function onSubmit(values, { setErrors }) {
 
                     <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, isSubmitting }">
                         <div class="input-group mb-3">
-                            <Field name="username" type="text" class="form-control"
+                            <Field name="username" type="text" class="form-control" :disabled="isSubmitting"
                                 :class="{ 'is-invalid': errors.username }" />
                             <div class="input-group-text">
                                 <span><fa-icon icon="fa-user" /></span>
@@ -39,7 +39,7 @@ async function onSubmit(values, { setErrors }) {
                         </div>
 
                         <div class="input-group mb-3">
-                            <Field name="password" type="password" class="form-control"
+                            <Field name="password" type="password" class="form-control" :disabled="isSubmitting"
                                 :class="{ 'is-invalid': errors.password }" />
                             <div class="input-group-text">
                                 <span><fa-icon icon="fa-lock" /></span>

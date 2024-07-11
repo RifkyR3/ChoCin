@@ -4,9 +4,9 @@
             <!-- Kiri -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                    <button class="nav-link" @click="useUiStore().togleSideBarState()">
                         <fa-icon icon="fa-bars" />
-                    </a>
+                    </button>
                 </li>
                 <li class="nav-item d-none d-md-block"> 
                     <router-link class="nav-link" to='/'>Home</router-link>
@@ -43,4 +43,5 @@
     </nav>
 </template>
 <script setup lang='ts'>
+import { useUiStore } from '@/stores'
 </script>
