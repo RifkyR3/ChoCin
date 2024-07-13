@@ -54,8 +54,8 @@ export const MENU = [
                 icon: 'fa-users'
             },
             {
-                name: 'Users',
-                path: '/users-group',
+                name: 'Groups',
+                path: '/groups',
                 icon: 'fa-user-group'
             }
         ]

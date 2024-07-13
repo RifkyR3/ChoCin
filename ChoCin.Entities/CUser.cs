@@ -20,4 +20,8 @@ public partial class CUser
 
     [StringLength(255)]
     public string? UserFullName { get; set; }
+
+    [ForeignKey("UserId")]
+    [InverseProperty("Users")]
+    public virtual ICollection<CGroup> Groups { get; set; } = new List<CGroup>();
 }

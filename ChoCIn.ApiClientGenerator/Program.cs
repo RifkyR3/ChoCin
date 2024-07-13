@@ -3,6 +3,7 @@
 using NJsonSchema.CodeGeneration.TypeScript;
 using NSwag;
 using NSwag.CodeGeneration.CSharp;
+using NSwag.CodeGeneration.OperationNameGenerators;
 using NSwag.CodeGeneration.TypeScript;
 
 Console.WriteLine("Hello, World!");
@@ -28,15 +29,13 @@ async static Task GenerateTypeScriptClient(string url, string generatePath) =>
         generatePath: generatePath,
         generateCode: (OpenApiDocument document) =>
         {
-            var settings = new TypeScriptClientGeneratorSettings
-            {
-                ClassName = "{controller}Client",
-            };
+            var settings = new TypeScriptClientGeneratorSettings();
 
             settings.TypeScriptGeneratorSettings.TypeStyle = TypeScriptTypeStyle.Interface;
             settings.TypeScriptGeneratorSettings.TypeScriptVersion = 4.3M;
             settings.TypeScriptGeneratorSettings.DateTimeType = TypeScriptDateTimeType.String;
 
+            settings.OperationNameGenerator = new MultipleClientsFromFirstTagAndOperationNameGenerator();
             settings.ClientBaseClass = "ApiBase";
             settings.UseTransformOptionsMethod = true;
             // settings.ConfigurationClass = "IConfig";

@@ -1,4 +1,5 @@
 ﻿using ChoCin.Entities;
+using ChoCin.Server.Models.Group;
 using ChoCin.Server.Models.User;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,23 +16,39 @@ namespace ChoCin.Server.Services
 
         public async Task<List<UserModel>> GetUsers()
         {
-            return await this.dbContext.CUsers.Select(
+            return await this.dbContext
+                .CUsers
+                .AsNoTracking()
+                .Select(
                 Q => new UserModel
                 {
                     UserFullName = Q.UserFullName,
                     UserId = Q.UserId,
                     UserName = Q.UserName,
+                    Groups = Q.Groups.Select(G => new GroupModel
+                    {
+                        GroupId = G.GroupId,
+                        GroupName = G.GroupName,
+                    }).ToList(),
                 }).ToListAsync();
         }
 
         public async Task<UserModel?> GetUserById(int id)
         {
-            return await this.dbContext.CUsers.Select(
+            return await this.dbContext
+                .CUsers
+                .AsNoTracking()
+                .Select(
                 Q => new UserModel
                 {
                     UserFullName = Q.UserName,
                     UserId = Q.UserId,
-                    UserName = Q.UserName
+                    UserName = Q.UserName,
+                    Groups = Q.Groups.Select(G => new GroupModel
+                    {
+                        GroupId = G.GroupId,
+                        GroupName = G.GroupName,
+                    }).ToList(),
                 }).Where(q => q.UserId == id)
                 .FirstOrDefaultAsync();
         }
@@ -52,7 +69,12 @@ namespace ChoCin.Server.Services
 
         public async Task<bool> UpdateUser(int id, AddUpdateUser updateUser)
         {
-            var user = await this.dbContext.CUsers.Where(q => q.UserId == id).FirstOrDefaultAsync();
+            var user = await this.dbContext
+                .CUsers
+                .AsNoTracking()
+                .Where(q => q.UserId == id)
+                .FirstOrDefaultAsync();
+
             if (user != null)
             {
                 user.UserName = updateUser.UserName;
@@ -66,7 +88,12 @@ namespace ChoCin.Server.Services
 
         public async Task<bool> DeleteUser(int id)
         {
-            var user = await this.dbContext.CUsers.Where(q => q.UserId == id).FirstOrDefaultAsync();
+            var user = await this.dbContext
+                .CUsers
+                .AsNoTracking()
+                .Where(q => q.UserId == id)
+                .FirstOrDefaultAsync();
+
             if (user != null)
             {
                 this.dbContext.Remove(user);

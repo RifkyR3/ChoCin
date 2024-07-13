@@ -9,7 +9,7 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "chocin.client", "chocin.cli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoCin.Entities", "ChoCin.Entities\ChoCin.Entities.csproj", "{BB0031E1-AB60-46FA-BBA0-44F09DBCEC3A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChoCIn.ApiClientGenerator", "ChoCIn.ApiClientGenerator\ChoCIn.ApiClientGenerator.csproj", "{417E46D4-57A1-48C7-9563-AC10A380CC50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChoCin.ApiClientGenerator", "ChoCIn.ApiClientGenerator\ChoCin.ApiClientGenerator.csproj", "{417E46D4-57A1-48C7-9563-AC10A380CC50}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

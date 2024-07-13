@@ -14,6 +14,22 @@ namespace ChoCin.Server
             _services = services;
         }
 
+        public void RegisterServices()
+        {
+            this._services.AddScoped<AuthService>();
+            this._services.AddScoped<UserService>();
+            this._services.AddScoped<GroupService>();
+            this._services.AddScoped<ModuleService>();
+        }
+
+        public void RegisterDatabase(string? connectionString)
+        {
+            this._services.AddDbContext<ChocinDbContext>(options =>
+            {
+                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+            });
+        }
+
         public void ConfigureServices()
         {
             this._services.AddSwaggerGen(swagger =>
@@ -23,7 +39,7 @@ namespace ChoCin.Server
                 {
                     Version = "v1",
                     Title = "JWT Token Authentication API",
-                    Description = ".NET 8 Web API"
+                    Description = "ChoCin Web API"
                 });
                 // To Enable authorization using Swagger (JWT)
                 swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
@@ -33,7 +49,7 @@ namespace ChoCin.Server
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header,
-                    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+                    Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below",
                 });
                 swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
@@ -56,20 +72,6 @@ namespace ChoCin.Server
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             this._services.AddEndpointsApiExplorer();
             this._services.AddSwaggerGen();
-        }
-
-        public void RegisterServices()
-        {
-            this._services.AddScoped<AuthService>();
-            this._services.AddScoped<UserService>();
-        }
-
-        public void RegisterDatabase(string? connectionString)
-        {
-            this._services.AddDbContext<ChocinDbContext>(options =>
-            {
-                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
-            });
         }
     }
 }
