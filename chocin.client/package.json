@@ -23,6 +23,7 @@
     "bootstrap": "^5.3.3",
     "overlayscrollbars": "^2.9.2",
     "pinia": "^2.1.7",
+    "pinia-plugin-persistedstate": "^3.2.1",
     "vee-validate": "^4.13.2",
     "vue": "^3.4.29",
     "vue-facing-decorator": "^3.0.4",

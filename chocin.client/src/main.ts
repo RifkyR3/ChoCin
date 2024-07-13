@@ -4,7 +4,8 @@ import './index.scss';
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
-import { createPinia } from 'pinia'
+import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 import * as bootstrap from 'bootstrap';
 
 import './main-icons';
@@ -30,14 +31,16 @@ const options: PluginOptions = {
     rtl: false
 };
 
-const pinia = createPinia()
+const pinia = createPinia();
+pinia.use(piniaPluginPersistedstate);
+
 const app = createApp(App);
 app.component('fa-icon', FontAwesomeIcon)
     .use(router)
     .use(pinia)
     .use(Toast, options)
     .use(ProfabricComponents);
-
-app.component('default-layout', DefaultLayout);
+    
 app.component('empty-layout', EmptyLayout);
+app.component('default-layout', DefaultLayout);
 app.mount('#app');
