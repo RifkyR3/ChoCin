@@ -624,6 +624,8 @@ export interface JwtAuthResponse {
     fullName?: string | undefined;
     username?: string | undefined;
     token?: string | undefined;
+    groups?: GroupModel[] | undefined;
+    modules?: ModuleModel[] | undefined;
 }
 
 export interface JwtLoginFormModel {

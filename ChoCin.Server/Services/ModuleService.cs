@@ -18,7 +18,10 @@ namespace ChoCin.Server.Services
             return await this.dbContext
                 .CModules
                 .AsNoTracking()
-                .Where(W => W.ModuleSubId == null)
+                .Where(W =>
+                    W.ModuleSubId == null
+                    && W.Groups.Select(WG => WG.GroupId).Contains(groupId)
+                )
                 .OrderBy(O => O.ModuleOrder)
                 .Select(Q => new ModuleModel
                 {
@@ -26,10 +29,7 @@ namespace ChoCin.Server.Services
                     Name = Q.ModuleName,
                     Icon = Q.ModuleIcon,
                     Path = Q.ModulePath,
-                    Children = this.dbContext
-                        .CModules
-                        .AsNoTracking()
-                        .Where(WC => WC.ModuleSubId == Q.ModuleId)
+                    Children = Q.InverseModuleSub
                         .OrderBy(OC => OC.ModuleOrder)
                         .Select(QC => new ModuleModel
                         {

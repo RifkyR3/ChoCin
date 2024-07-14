@@ -1,7 +1,8 @@
 ﻿using ChoCin.Entities;
 using ChoCin.Server.Models;
 using ChoCin.Server.Models.Auth;
-using ChoCin.Server.Models.User;
+using ChoCin.Server.Models.Group;
+using ChoCin.Server.Models.Module;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -37,28 +38,51 @@ namespace ChoCin.Server.Services
             // return null if user not found
             if (!validatePassword) return null;
 
-            var user = new UserModel
-            {
-                UserFullName = tmpUser.UserFullName,
-                UserName = tmpUser.UserName,
-                UserPassword = tmpUser.UserPassword,
-                UserId = tmpUser.UserId
-            };
-
             // authentication successful so generate jwt token
-            var token = await generateJwtToken(user);
+            var token = await generateJwtToken(tmpUser.UserId);
 
-            return new JwtAuthResponse
-            {
-                FullName = tmpUser.UserFullName,
-                Username = tmpUser.UserName,
-                Id = tmpUser.UserId,
-                Token = token
-            };
+            var response = await this._context
+                .CUsers
+                .AsNoTracking()
+                .Where(W => W.UserId == tmpUser.UserId)
+                .Select(Q => new JwtAuthResponse
+                {
+                    Id = Q.UserId,
+                    Username = Q.UserName,
+                    FullName = Q.UserFullName,
+                    Token = token,
+                    Groups = Q.Groups
+                        .Select(G => new GroupModel
+                        {
+                            GroupId = G.GroupId,
+                            GroupName = G.GroupName,
+                        }).ToList(),
+                    Modules = Q.Groups.OrderBy(G => G.GroupId).First()
+                        .Modules
+                        .Where(M => M.ModuleSubId == null)
+                        .OrderBy(M => M.ModuleOrder)
+                        .Select(QM => new ModuleModel
+                        {
+                            Id = QM.ModuleId,
+                            Name = QM.ModuleName,
+                            Icon = QM.ModuleIcon,
+                            Path = QM.ModulePath,
+                            Children = QM.InverseModuleSub
+                                .OrderBy(M => M.ModuleOrder)
+                                .Select(QC => new ModuleModel
+                                {
+                                    Id = QC.ModuleId,
+                                    Name = QC.ModuleName,
+                                    Icon = QC.ModuleIcon,
+                                    Path = QC.ModulePath,
+                                }).ToList()
+                        }).ToList()
+                }).FirstOrDefaultAsync();
+            return response;
         }
 
         // helper methods
-        private async Task<string> generateJwtToken(UserModel user)
+        private async Task<string> generateJwtToken(int userId)
         {
             //Generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -67,7 +91,7 @@ namespace ChoCin.Server.Services
                 var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
-                    Subject = new ClaimsIdentity(new[] { new Claim("id", user.UserId.ToString()) }),
+                    Subject = new ClaimsIdentity(new[] { new Claim("id", userId.ToString()) }),
                     Expires = DateTime.UtcNow.AddDays(7),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
                 };

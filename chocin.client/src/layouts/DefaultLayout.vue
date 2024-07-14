@@ -3,8 +3,9 @@
         <div class="app-wrapper">
             <TopBar />
             <SideBar />
-            <slot />
-
+            <main class="app-main">
+                <slot />
+            </main>
         </div>
     </div>
 </template>

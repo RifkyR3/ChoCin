@@ -31,7 +31,7 @@ async function onSubmit(values: any) {
                     <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, isSubmitting }">
                         <div class="input-group mb-3">
                             <Field name="username" type="text" class="form-control" :disabled="isSubmitting"
-                                :class="{ 'is-invalid': errors.username }" />
+                                   :class="{ 'is-invalid': errors.username }" />
                             <div class="input-group-text">
                                 <span><fa-icon icon="fa-user" /></span>
                             </div>
@@ -40,7 +40,7 @@ async function onSubmit(values: any) {
 
                         <div class="input-group mb-3">
                             <Field name="password" type="password" class="form-control" :disabled="isSubmitting"
-                                :class="{ 'is-invalid': errors.password }" />
+                                   :class="{ 'is-invalid': errors.password }" />
                             <div class="input-group-text">
                                 <span><fa-icon icon="fa-lock" /></span>
                             </div>

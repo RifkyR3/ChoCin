@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 
+import { useUiStore } from './ui.store';
+
 import router from '@/router';
 import { useToast } from 'vue-toastification';
 
@@ -35,10 +37,26 @@ export const useAuthStore = defineStore('auth', {
                     return await router.push('/login');
                 }
 
-                await this.setUser(response.id, response.token)
-
                 this.credential = response;
                 this.authenticate = true;
+
+                // set User
+                this.user = {
+                    userId: response.id,
+                    userName: response.username,
+                    userFullName: response.fullName,
+                    groups: response.groups
+                };
+
+                // set Group
+                if (this.user.groups) {
+                    this.userGroup = this.user.groups[this.userGroupSelected];
+                }
+
+                // set Module
+                if (response.modules) {
+                    useUiStore().sideBarNavigation = response.modules;
+                }
 
                 return await router.push(this.returnUrl || '/')
             } catch (error) {
@@ -56,7 +74,7 @@ export const useAuthStore = defineStore('auth', {
         },
         async setUser(userId: number, token: string) {
             const apiUser: UserClient = new UserClient();
-            await apiUser.setAuthToken(token);
+            apiUser.setAuthToken(token);
             this.user = await apiUser.getUserById(userId);
 
             if (this.user.groups) {

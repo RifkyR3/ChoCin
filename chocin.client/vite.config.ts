@@ -41,6 +41,8 @@ export default defineConfig({
             '@': fileURLToPath(new URL('./src', import.meta.url)),
             '@stores': path.resolve(__dirname, 'src/stores'),
             '@components': path.resolve(__dirname, 'src/components'),
+            '@layouts': path.resolve(__dirname, 'src/layouts'),
+            '@views': path.resolve(__dirname, 'src/views'),
             '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
             '~admin-lte': path.resolve(__dirname, 'node_modules/admin-lte'),
         }

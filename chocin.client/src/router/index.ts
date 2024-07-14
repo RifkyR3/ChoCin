@@ -1,17 +1,22 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import { useAuthStore } from '@/stores'
 
-import * as views from '../views';
+import * as views from '@/views';
+
+import { userRoutes } from './user.router';
+import { groupRoutes } from './group.router';
 
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
-        name: '',
+        name: 'Dashboard',
         component: views.DashboardView,
         meta: {
             requiresAuth: true
         }
     },
+    ...userRoutes,
+    ...groupRoutes,
     {
         path: '/login',
         name: 'Login',
@@ -32,8 +37,8 @@ const routes: Array<RouteRecordRaw> = [
     },
 
     // otherwise redirect to home
-    { 
-        path: '/:pathMatch(.*)*', 
+    {
+        path: '/:pathMatch(.*)*',
         component: views.ErrorView
     }
 ];
@@ -44,7 +49,6 @@ const router = createRouter({
 });
 
 router.beforeEach(async (to, from, next) => {
-
     const auth = useAuthStore()
     const logedin = auth.authenticate;
 

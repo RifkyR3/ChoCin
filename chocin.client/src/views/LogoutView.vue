@@ -3,9 +3,13 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { mapStores } from 'pinia'
 import { useAuthStore, useUiStore } from '@/stores'
 
 export default defineComponent({
+    computed: {
+        ...mapStores(useAuthStore, useUiStore)
+    },
     created() {
         // fetch the data when the view is created and the data is
         // already being observed
@@ -15,17 +19,14 @@ export default defineComponent({
     methods: {
 
         async fetchData() {
-            const auth = useAuthStore();
-            const ui = useUiStore();
+            this.uiStore.sideBarNavigation = null;
 
-            ui.sideBarNavigation = null;
+            this.authStore.credential = null;
+            this.authStore.authenticate = false;
 
-            auth.credential = null;
-            auth.authenticate = false;
-
-            auth.user = null;
-            auth.userGroup = null;
-            auth.userGroupSelected = 0;
+            this.authStore.user = null;
+            this.authStore.userGroup = null;
+            this.authStore.userGroupSelected = 0;
 
             return await this.$router.push('/login')
         }

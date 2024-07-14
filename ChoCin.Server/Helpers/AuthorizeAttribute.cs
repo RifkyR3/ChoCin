@@ -1,7 +1,6 @@
-﻿using ChoCin.Entities;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿using ChoCin.Server.Models.User;
 using Microsoft.AspNetCore.Mvc;
-using ChoCin.Server.Models.User;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ChoCin.Server.Helpers
 {
