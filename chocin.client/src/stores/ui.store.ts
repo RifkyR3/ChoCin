@@ -29,13 +29,13 @@ export const useUiStore = defineStore('ui', {
             }
         },
         async getModule() {
-            const token = await useAuthStore().getToken();
             const groupId = useAuthStore().userGroup?.groupId;
 
             const api: ModuleClient = new ModuleClient();
-            api.setAuthToken(token);
 
-            this.sideBarNavigation = await api.getModuleByGroup(groupId);
+            if (groupId) {
+                this.sideBarNavigation = await api.getModuleByGroup(groupId);
+            }
         }
     }
 });

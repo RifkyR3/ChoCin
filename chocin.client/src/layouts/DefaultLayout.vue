@@ -1,5 +1,5 @@
 <template>
-    <div class="layout-fixed sidebar-expand-lg bg-body-tertiary " :class="useUiStore().sideBarState">
+    <div class="layout-fixed sidebar-expand-lg sidebar-mini bg-body-tertiary " :class="useUiStore().sideBarState">
         <div class="app-wrapper">
             <TopBar />
             <SideBar />

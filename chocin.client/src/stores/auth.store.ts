@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 
 import { useUiStore } from './ui.store';
+import { useTokenStore } from './token.store';
 
 import router from '@/router';
 import { useToast } from 'vue-toastification';
@@ -40,6 +41,9 @@ export const useAuthStore = defineStore('auth', {
                 this.credential = response;
                 this.authenticate = true;
 
+                // set Token
+                useTokenStore().token = response.token;
+
                 // set User
                 this.user = {
                     userId: response.id,
@@ -49,9 +53,7 @@ export const useAuthStore = defineStore('auth', {
                 };
 
                 // set Group
-                if (this.user.groups) {
-                    this.userGroup = this.user.groups[this.userGroupSelected];
-                }
+                this.setUserGroup(this.userGroupSelected)
 
                 // set Module
                 if (response.modules) {
@@ -77,9 +79,13 @@ export const useAuthStore = defineStore('auth', {
             apiUser.setAuthToken(token);
             this.user = await apiUser.getUserById(userId);
 
-            if (this.user.groups) {
+            this.setUserGroup(this.userGroupSelected)
+        },
+        setUserGroup(key: number) {
+            if (this.user?.groups) {
+                this.userGroupSelected = key;
                 this.userGroup = this.user.groups[this.userGroupSelected];
             }
-        }
+        } 
     }
 })

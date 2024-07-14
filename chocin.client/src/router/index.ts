@@ -36,7 +36,12 @@ const routes: Array<RouteRecordRaw> = [
         }
     },
 
-    // otherwise redirect to home
+    {
+        path: '/error',
+        name: 'Error',
+        component: views.ErrorView
+    },
+    // otherwise redirect to error
     {
         path: '/:pathMatch(.*)*',
         component: views.ErrorView

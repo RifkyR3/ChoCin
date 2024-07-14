@@ -36,7 +36,6 @@
 import { defineComponent } from 'vue';
 import ContentHeader from '@components/ContentHeader.vue';
 import { GroupClient, type GroupModel } from '@/helpers/webApi';
-import { useAuthStore } from '@/stores';
 
 interface Data {
     datas: GroupModel[] | null
@@ -65,7 +64,6 @@ export default defineComponent({
             let loader = this.$loading.show();
             const api: GroupClient = new GroupClient();
 
-            api.setAuthToken(await useAuthStore().getToken());
             this.datas = await api.getListGroup();
 
             loader.hide();

@@ -44,7 +44,6 @@
 import { defineComponent } from 'vue';
 import ContentHeader from '@components/ContentHeader.vue';
 import { UserClient, type UserModel } from '@/helpers/webApi';
-import { useAuthStore } from '@/stores';
 
 interface Data {
     users: UserModel[] | null
@@ -73,7 +72,6 @@ export default defineComponent({
             let loader = this.$loading.show();
             const userApi: UserClient = new UserClient();
 
-            userApi.setAuthToken(await useAuthStore().getToken());
             this.users = await userApi.getListUser();
 
             loader.hide();

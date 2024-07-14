@@ -4,7 +4,7 @@
             <!-- Kiri -->
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <button class="nav-link" @click="useUiStore().togleSideBarState()">
+                    <button class="nav-link" @click="uiStore.togleSideBarState()">
                         <fa-icon icon="fa-bars" />
                     </button>
                 </li>
@@ -27,6 +27,7 @@
                             <img src="../assets/avatar.png" class="rounded-circle shadow" alt="User Image">
                             <p>
                                 {{ userLogin }}
+                                <small>{{ userGroupName }}</small>
                             </p>
                         </li>
                         <!--end::User Image-->
@@ -44,5 +45,9 @@
 <script setup lang='ts'>
 import { useUiStore, useAuthStore } from '@/stores'
 
-const userLogin = useAuthStore().credential?.fullName;
+const authStore = useAuthStore();
+const uiStore = useUiStore();
+
+const userLogin = authStore.credential?.fullName;
+const userGroupName = authStore.userGroup?.groupName;
 </script>

@@ -8,10 +8,12 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
+import { useTokenStore } from "@/stores";
 export class ApiBase {
-    private authToken : string = '';
+    private authToken: string = '';
 
     protected constructor() {
+        this.authToken = useTokenStore().token;
     }
 
     public setAuthToken(token: string) {
