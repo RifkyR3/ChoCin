@@ -10,4 +10,12 @@ export const userRoutes: Array<RouteRecordRaw> = [
             requiresAuth: true
         }
     },
+    {
+        path: '/users/input/:userId(\\d+)?',
+        name: 'User Input',
+        component: views.UserInput,
+        meta: {
+            requiresAuth: true
+        }
+    },
 ]

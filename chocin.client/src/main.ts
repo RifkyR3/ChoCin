@@ -1,12 +1,14 @@
-// import './assets/main.css'
-import './index.scss';
+import './assets/index.scss';
 
-import { createApp } from 'vue'
-import App from './App.vue'
+import 'bootstrap';
+import 'admin-lte/src/ts/adminlte.ts';
+
+import { createApp } from 'vue';
+import App from './App.vue';
+
 import router from './router';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
-import * as bootstrap from 'bootstrap';
 
 import './main-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
@@ -15,6 +17,7 @@ import { ProfabricComponents } from '@profabric/vue-components';
 
 import Toast, { type PluginOptions } from 'vue-toastification';
 import { LoadingPlugin, type Props } from 'vue-loading-overlay';
+import VueSweetalert2 from 'vue-sweetalert2';
 
 import DefaultLayout from '@layouts/DefaultLayout.vue';
 import EmptyLayout from '@layouts/EmptyLayout.vue';
@@ -49,6 +52,7 @@ app.use(pinia);
 
 app.use(Toast, toastOptions);
 app.use(LoadingPlugin, loadingOptions);
+app.use(VueSweetalert2);
 
 app.use(ProfabricComponents);
 

@@ -80,6 +80,8 @@ namespace ChoCin.Server.Services
                 user.UserName = updateUser.UserName;
                 user.UserPassword = BCrypt.Net.BCrypt.HashPassword((string)updateUser.Password);
                 user.UserFullName = updateUser.Name;
+                
+                dbContext.CUsers.Update(user);
                 var result = await dbContext.SaveChangesAsync();
                 return result >= 0;
             }
