@@ -54,6 +54,8 @@ import ContentHeader from '@components/ContentHeader.vue';
 import { UserClient, type AddUpdateUser, type UserModel } from '@/helpers/webApi';
 import { useToast } from 'vue-toastification';
 
+const userApi: UserClient = new UserClient();
+
 interface Data {
     user: UserModel | null,
     userId: number | null,
@@ -101,8 +103,6 @@ export default defineComponent({
         },
         async doAdd() {
             try {
-                const userApi: UserClient = new UserClient();
-
                 const res = await userApi.addUser(this.userInput);
 
                 console.log(res);
@@ -115,11 +115,8 @@ export default defineComponent({
         },
         async doUpdate(userId: number) {
             try {
-                const userApi: UserClient = new UserClient();
-
-                const res = await userApi.updateUser(userId, this.userInput);
-
-                console.log(res);
+                await userApi.updateUser(userId, this.userInput);
+                
                 useToast().success('Successfully to update User');
                 this.inputRes = true;
             } catch (e) {
@@ -129,15 +126,15 @@ export default defineComponent({
         },
         async getUserById(id: number) {
             let loader = this.$loading.show();
-            const userApi: UserClient = new UserClient();
 
             // console.log(this.userInput);
             try {
                 this.user = await userApi.getUserById(id);
 
                 this.userInput = {
-                    name: this.user.userFullName,
-                    userName: this.user.userName
+                    name: this.user.userFullName == undefined ? '' : this.user.userFullName,
+                    userName: this.user.userName,
+                    password: ''
                 }
 
             } catch (e) {

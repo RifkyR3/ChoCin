@@ -98,7 +98,7 @@ namespace ChoCin.Server.Services
 
             if (user != null)
             {
-                this.dbContext.Remove(user);
+                this.dbContext.CUsers.Remove(user);
                 var result = await dbContext.SaveChangesAsync();
                 return result >= 0;
             }

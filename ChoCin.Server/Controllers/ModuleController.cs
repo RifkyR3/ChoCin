@@ -18,8 +18,8 @@ namespace ChoCin.Server.Controllers
         }
 
         [HttpGet]
-        [Route("{groupId}", Name = "GetModuleByGroup")]
-        public async Task<ActionResult<List<ModuleModel>>> GetModules([FromRoute] int groupId)
+        [Route("{groupId}", Name = "getModuleByGroup")]
+        public async Task<ActionResult<List<ModuleModel>>> GetModuleByGroup([FromRoute] int groupId)
         {
             return await _moduleService.GetModuleByGroup(groupId);
         }

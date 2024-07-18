@@ -22,8 +22,8 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th style="width: 3%;">#</th>
-                                        <th style="width: 3%;">&nbsp;</th>
+                                        <th style="width: 3%; text-align: center;">#</th>
+                                        <th style="width: 5%;">&nbsp;</th>
                                         <th>Username</th>
                                         <th>Name</th>
                                         <th>Groups</th>
@@ -34,9 +34,13 @@
                                         <td class="align-middle text-center">
                                         </td>
                                         <td class="align-middle text-center">
-                                            <RouterLink :to="'/users/input/'+value.userId">
+                                            <RouterLink :to="'/users/input/' + value.userId">
                                                 <fa-icon icon="pen-to-square"></fa-icon>
                                             </RouterLink>
+                                            &nbsp;
+                                            <a href="javascript:void(0);" @click="btnDeleteUser(value.userId)">
+                                                <fa-icon icon="trash-can"></fa-icon>
+                                            </a>
                                         </td>
                                         <td class="align-middle">
                                             {{ value.userName }}
@@ -65,6 +69,10 @@
 import { defineComponent } from 'vue';
 import ContentHeader from '@components/ContentHeader.vue';
 import { UserClient, type UserModel } from '@/helpers/webApi';
+import Swal from 'sweetalert2';
+import { useToast } from 'vue-toastification';
+
+const userApi: UserClient = new UserClient();
 
 interface Data {
     users: UserModel[] | null
@@ -91,7 +99,6 @@ export default defineComponent({
     methods: {
         async fetchUsers() {
             let loader = this.$loading.show();
-            const userApi: UserClient = new UserClient();
 
             this.users = await userApi.getListUser();
 
@@ -100,8 +107,38 @@ export default defineComponent({
         btnAddUser() {
             this.$router.push('/users/input/');
         },
-        btnDeleteUser(userId:number) {
-            this.
+        async btnDeleteUser(userId: number) {
+            Swal.fire({
+                title: "Are you sure?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: 'red',
+                confirmButtonText: "Yes, delete it!"
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    await this.doDeleteUser(userId);
+                }
+            });
+        },
+        async doDeleteUser(userId: number) {
+            let loader = this.$loading.show();
+            let res: boolean = true;
+            try {
+                await userApi.deleteUser(userId);
+                
+            } catch (e) {
+                res = false;
+            }
+
+            this.users = await userApi.getListUser();
+
+            if (res) {
+                useToast().success('Successfully to delete User');
+            } else {
+                useToast().warning('Failed to delete User');
+            }
+            
+            loader.hide();
         }
     }
 })

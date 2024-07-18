@@ -20,14 +20,14 @@ namespace ChoCin.Server.Controllers
             this._groupService = groupService;
         }
 
-        [HttpGet(Name = "GetListGroup")]
-        public async Task<ActionResult<List<GroupModel>>> Get()
+        [HttpGet(Name = "getListGroup")]
+        public async Task<ActionResult<List<GroupModel>>> GetListGroup()
         {
             return await this._groupService.GetGroups();
         }
 
-        [HttpGet("{id}", Name = "GetGroupById")]
-        public async Task<ActionResult<GroupModel>> Get(int id)
+        [HttpGet("{id}", Name = "getGroupById")]
+        public async Task<ActionResult<GroupModel>> GetGroupById(int id)
         {
             var group = await this._groupService.GetGroupById(id);
             if (group == null)
@@ -37,8 +37,8 @@ namespace ChoCin.Server.Controllers
             return group;
         }
 
-        [HttpPost(Name = "AddGroup")]
-        public async Task<IActionResult> Post([FromBody] AddUpdateGroup value)
+        [HttpPost(Name = "addGroup")]
+        public async Task<IActionResult> AddGroup([FromBody] AddUpdateGroup value)
         {
             if (!await _groupService.AddGroup(value))
             {
@@ -51,8 +51,8 @@ namespace ChoCin.Server.Controllers
             });
         }
 
-        [HttpPut("{id}", Name = "UpdateGroup")]
-        public async Task<IActionResult> Put(int id, [FromBody] AddUpdateGroup value)
+        [HttpPut("{id}", Name = "updateGroup")]
+        public async Task<IActionResult> UpdateGroup(int id, [FromBody] AddUpdateGroup value)
         {
             if (!await _groupService.UpdateGroup(id, value))
             {
@@ -65,8 +65,8 @@ namespace ChoCin.Server.Controllers
             });
         }
 
-        [HttpDelete("{id}", Name = "DeleteGroup")]
-        public async Task<IActionResult> Delete(int id)
+        [HttpDelete("{id}", Name = "deleteGroup")]
+        public async Task<IActionResult> DeleteGroup(int id)
         {
             if (!await _groupService.DeleteGroup(id))
             {
@@ -79,7 +79,7 @@ namespace ChoCin.Server.Controllers
             });
         }
 
-        [HttpGet("/combo-group", Name = "GetComboGroup")]
+        [HttpGet("/combo-group", Name = "getComboGroup")]
         public async Task<ActionResult<List<DropDownModel>>> GetComboGroup()
         {
             return await _groupService.GetComboGroup();

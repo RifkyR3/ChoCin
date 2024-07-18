@@ -17,14 +17,14 @@ namespace ChoCin.Server.Controllers
             this._userService = userService;
         }
 
-        [HttpGet(Name = "GetListUser")]
-        public async Task<ActionResult<List<UserModel>>> Get()
+        [HttpGet(Name = "getListUser")]
+        public async Task<ActionResult<List<UserModel>>> GetListUser()
         {
             return await _userService.GetUsers();
         }
 
-        [HttpGet("{id}", Name = "GetUserById")]
-        public async Task<ActionResult<UserModel>> Get(int id)
+        [HttpGet("{id}", Name = "getUserById")]
+        public async Task<ActionResult<UserModel>> GetUserById(int id)
         {
             var user = await _userService.GetUserById(id);
             if (user == null)
@@ -35,8 +35,8 @@ namespace ChoCin.Server.Controllers
             return user;
         }
 
-        [HttpPost(Name = "AddUser")]
-        public async Task<IActionResult> Post([FromBody] AddUpdateUser addUser)
+        [HttpPost(Name = "addUser")]
+        public async Task<IActionResult> AddUser([FromBody] AddUpdateUser addUser)
         {
             if (!await _userService.AddUser(addUser))
             {
@@ -50,8 +50,8 @@ namespace ChoCin.Server.Controllers
         }
 
         [HttpPut]
-        [Route("{id}", Name = "UpdateUser")]
-        public async Task<IActionResult> Put([FromBody] AddUpdateUser updateUser, [FromRoute] int id)
+        [Route("{id}", Name = "updateUser")]
+        public async Task<IActionResult> UpdateUser([FromBody] AddUpdateUser updateUser, [FromRoute] int id)
         {
             if (!await _userService.UpdateUser(id, updateUser))
             {
@@ -65,8 +65,8 @@ namespace ChoCin.Server.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}", Name = "DeleteUser")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        [Route("{id}", Name = "deleteUser")]
+        public async Task<IActionResult> DeleteUser([FromRoute] int id)
         {
             if (!await _userService.DeleteUser(id))
             {

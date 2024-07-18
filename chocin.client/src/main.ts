@@ -1,7 +1,7 @@
 import './assets/index.scss';
 
 import 'bootstrap';
-import 'admin-lte/src/ts/adminlte.ts';
+import 'admin-lte/src/ts/adminlte';
 
 import { createApp } from 'vue';
 import App from './App.vue';
@@ -17,7 +17,6 @@ import { ProfabricComponents } from '@profabric/vue-components';
 
 import Toast, { type PluginOptions } from 'vue-toastification';
 import { LoadingPlugin, type Props } from 'vue-loading-overlay';
-import VueSweetalert2 from 'vue-sweetalert2';
 
 import DefaultLayout from '@layouts/DefaultLayout.vue';
 import EmptyLayout from '@layouts/EmptyLayout.vue';
@@ -47,12 +46,11 @@ pinia.use(piniaPluginPersistedstate);
 
 const app = createApp(App);
 
-app.use(router);
 app.use(pinia);
+app.use(router);
 
 app.use(Toast, toastOptions);
 app.use(LoadingPlugin, loadingOptions);
-app.use(VueSweetalert2);
 
 app.use(ProfabricComponents);
 
