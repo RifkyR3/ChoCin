@@ -12,18 +12,18 @@
                             </h3>
                             <div class="card-tools">
                                 <button type="button" class="btn btn-tool btn-outline-primary" @click="btnAddUser">
-                                    <fa-icon icon="plus"></fa-icon>
+                                    <fas icon="plus"></fas>
                                     Add User
                                 </button>
                             </div>
                         </div>
 
                         <div class="card-body">
-                            <table class="table table-bordered">
+                            <table class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
                                         <th style="width: 3%; text-align: center;">#</th>
-                                        <th style="width: 5%;">&nbsp;</th>
+                                        <th style="width: 10%;">&nbsp;</th>
                                         <th>Username</th>
                                         <th>Name</th>
                                         <th>Groups</th>
@@ -34,13 +34,16 @@
                                         <td class="align-middle text-center">
                                         </td>
                                         <td class="align-middle text-center">
-                                            <RouterLink :to="'/users/input/' + value.userId">
-                                                <fa-icon icon="pen-to-square"></fa-icon>
-                                            </RouterLink>
-                                            &nbsp;
-                                            <a href="javascript:void(0);" @click="btnDeleteUser(value.userId)">
-                                                <fa-icon icon="trash-can"></fa-icon>
-                                            </a>
+                                            <button title="Edit User" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                class="btn btn-outline-success btn-sm"
+                                                v-on:click="btnEdit(value.userId)">
+                                                <fas icon="pen-to-square"></fas>
+                                            </button>
+                                            <button title="Delete User" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                class="btn btn-outline-danger btn-sm pl-1"
+                                                v-on:click="btnDeleteUser(value.userId)">
+                                                <fas icon="trash-can"></fas>
+                                            </button>
                                         </td>
                                         <td class="align-middle">
                                             {{ value.userName }}
@@ -125,7 +128,7 @@ export default defineComponent({
             let res: boolean = true;
             try {
                 await userApi.deleteUser(userId);
-                
+
             } catch (e) {
                 res = false;
             }
@@ -137,8 +140,11 @@ export default defineComponent({
             } else {
                 useToast().warning('Failed to delete User');
             }
-            
+
             loader.hide();
+        },
+        btnEdit(userId: number) {
+            this.$router.push('/users/input/' + userId);
         }
     }
 })

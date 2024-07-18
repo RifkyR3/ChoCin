@@ -5,7 +5,7 @@
             <ul class="navbar-nav">
                 <li class="nav-item">
                     <button class="nav-link" @click="uiStore.togleSideBarState()">
-                        <fa-icon icon="fa-bars" />
+                        <fas icon="fa-bars" />
                     </button>
                 </li>
                 <li class="nav-item d-none d-md-block">

@@ -31,9 +31,22 @@ export class ApiBase {
         }
         return Promise.resolve(options);
     };
+
+    protected transformResult(url: string, response: Response, processor: (response: Response) => any) {
+        // TODO: Return own result or throw exception to change default processing behavior, 
+        // or call processor function to run the default processing logic
+
+        // console.log("Service call: " + url);
+        return processor(response); 
+    }
 }
 
-export class AuthClient extends ApiBase {
+export interface IAuthClient {
+
+    authenticate(model: JwtLoginFormModel): Promise<JwtAuthResponse>;
+}
+
+export class AuthClient extends ApiBase implements IAuthClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -63,7 +76,7 @@ export class AuthClient extends ApiBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processAuthenticate(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processAuthenticate(_response));
         });
     }
 
@@ -85,7 +98,22 @@ export class AuthClient extends ApiBase {
     }
 }
 
-export class GroupClient extends ApiBase {
+export interface IGroupClient {
+
+    getListGroup(): Promise<GroupModel[]>;
+
+    addGroup(value: AddUpdateGroup): Promise<FileResponse>;
+
+    getGroupById(id: number): Promise<GroupModel>;
+
+    updateGroup(id: number, value: AddUpdateGroup): Promise<FileResponse>;
+
+    deleteGroup(id: number): Promise<FileResponse>;
+
+    getComboGroup(): Promise<DropDownModel[]>;
+}
+
+export class GroupClient extends ApiBase implements IGroupClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -111,7 +139,7 @@ export class GroupClient extends ApiBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processGetListGroup(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetListGroup(_response));
         });
     }
 
@@ -151,7 +179,7 @@ export class GroupClient extends ApiBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processAddGroup(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processAddGroup(_response));
         });
     }
 
@@ -195,7 +223,7 @@ export class GroupClient extends ApiBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processGetGroupById(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetGroupById(_response));
         });
     }
 
@@ -238,7 +266,7 @@ export class GroupClient extends ApiBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processUpdateGroup(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processUpdateGroup(_response));
         });
     }
 
@@ -282,7 +310,7 @@ export class GroupClient extends ApiBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processDeleteGroup(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processDeleteGroup(_response));
         });
     }
 
@@ -323,7 +351,7 @@ export class GroupClient extends ApiBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processGetComboGroup(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetComboGroup(_response));
         });
     }
 
@@ -345,7 +373,12 @@ export class GroupClient extends ApiBase {
     }
 }
 
-export class ModuleClient extends ApiBase {
+export interface IModuleClient {
+
+    getModuleByGroup(groupId: number): Promise<ModuleModel[]>;
+}
+
+export class ModuleClient extends ApiBase implements IModuleClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -374,7 +407,7 @@ export class ModuleClient extends ApiBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processGetModuleByGroup(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetModuleByGroup(_response));
         });
     }
 
@@ -396,7 +429,20 @@ export class ModuleClient extends ApiBase {
     }
 }
 
-export class UserClient extends ApiBase {
+export interface IUserClient {
+
+    getListUser(): Promise<UserModel[]>;
+
+    addUser(addUser: AddUpdateUser): Promise<FileResponse>;
+
+    getUserById(id: number): Promise<UserModel>;
+
+    updateUser(updateUser: AddUpdateUser, id: number): Promise<FileResponse>;
+
+    deleteUser(id: number): Promise<FileResponse>;
+}
+
+export class UserClient extends ApiBase implements IUserClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -422,7 +468,7 @@ export class UserClient extends ApiBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processGetListUser(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetListUser(_response));
         });
     }
 
@@ -462,7 +508,7 @@ export class UserClient extends ApiBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processAddUser(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processAddUser(_response));
         });
     }
 
@@ -506,7 +552,7 @@ export class UserClient extends ApiBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processGetUserById(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetUserById(_response));
         });
     }
 
@@ -527,7 +573,7 @@ export class UserClient extends ApiBase {
         return Promise.resolve<UserModel>(null as any);
     }
 
-    updateUser(id: number, updateUser: AddUpdateUser, signal?: AbortSignal): Promise<FileResponse> {
+    updateUser(updateUser: AddUpdateUser, id: number, signal?: AbortSignal): Promise<FileResponse> {
         let url_ = this.baseUrl + "/api/User/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -549,7 +595,7 @@ export class UserClient extends ApiBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processUpdateUser(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processUpdateUser(_response));
         });
     }
 
@@ -593,7 +639,7 @@ export class UserClient extends ApiBase {
         return this.transformOptions(options_).then(transformedOptions_ => {
             return this.http.fetch(url_, transformedOptions_);
         }).then((_response: Response) => {
-            return this.processDeleteUser(_response);
+            return this.transformResult(url_, _response, (_response: Response) => this.processDeleteUser(_response));
         });
     }
 

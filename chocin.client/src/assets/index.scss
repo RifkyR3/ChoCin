@@ -6,6 +6,19 @@
 @import 'sweetalert2/dist/sweetalert2.min.css';
 
 // Import all of Bootstrap's CSS
-@import "~bootstrap/scss/bootstrap";
+@import "./bootstrap.scss";
+@import "~bootstrap-icons/font/bootstrap-icons.css";
 
 @import '~admin-lte/src/scss/adminlte.scss';
+
+#app {
+    width: 100vw;
+    height: 100vh;
+}
+
+.main-header .navbar-nav .nav-item .nav-link {
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}

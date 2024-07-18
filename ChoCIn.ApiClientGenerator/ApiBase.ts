@@ -22,4 +22,12 @@ export class ApiBase {
         }
         return Promise.resolve(options);
     };
+
+    protected transformResult(url: string, response: Response, processor: (response: Response) => any) {
+        // TODO: Return own result or throw exception to change default processing behavior, 
+        // or call processor function to run the default processing logic
+
+        // console.log("Service call: " + url);
+        return processor(response); 
+    }
 }

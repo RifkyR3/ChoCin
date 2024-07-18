@@ -39,7 +39,9 @@ async static Task GenerateTypeScriptClient(string url, string generatePath) =>
             settings.UseAbortSignal = true;
             settings.OperationNameGenerator = new MultipleClientsFromFirstTagAndOperationNameGenerator();
             settings.ClientBaseClass = "ApiBase";
+            settings.GenerateClientInterfaces = true;
             settings.UseTransformOptionsMethod = true;
+            settings.UseTransformResultMethod = true;
             settings.TypeScriptGeneratorSettings.ExtensionCode = File.ReadAllText("./ApiBase.ts");
 
             var generator = new TypeScriptClientGenerator(document, settings);

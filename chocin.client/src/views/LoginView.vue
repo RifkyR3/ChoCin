@@ -33,7 +33,7 @@ async function onSubmit(values: any) {
                             <Field name="username" type="text" class="form-control" :disabled="isSubmitting"
                                    :class="{ 'is-invalid': errors.username }" />
                             <div class="input-group-text">
-                                <span><fa-icon icon="fa-user" /></span>
+                                <span><fas icon="fa-user" /></span>
                             </div>
                             <div class="invalid-feedback">{{ errors.username }}</div>
                         </div>
@@ -42,7 +42,7 @@ async function onSubmit(values: any) {
                             <Field name="password" type="password" class="form-control" :disabled="isSubmitting"
                                    :class="{ 'is-invalid': errors.password }" />
                             <div class="input-group-text">
-                                <span><fa-icon icon="fa-lock" /></span>
+                                <span><fas icon="fa-lock" /></span>
                             </div>
                             <div class="invalid-feedback">{{ errors.password }}</div>
                         </div>

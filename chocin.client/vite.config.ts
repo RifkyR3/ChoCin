@@ -35,7 +35,9 @@ const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_H
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [plugin()],
+    plugins: [
+        plugin(),
+    ],
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -44,6 +46,7 @@ export default defineConfig({
             '@layouts': fileURLToPath(new URL('./src/layouts', import.meta.url)),
             '@views': fileURLToPath(new URL('./src/views', import.meta.url)),
             '~bootstrap': fileURLToPath(new URL('./node_modules/bootstrap', import.meta.url)),
+            '~bootstrap-icons': fileURLToPath(new URL('./node_modules/bootstrap-icons', import.meta.url)),
             '~admin-lte': fileURLToPath(new URL('./node_modules/admin-lte', import.meta.url)),
         }
     },

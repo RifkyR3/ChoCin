@@ -49,7 +49,8 @@ export const useAuthStore = defineStore('auth', {
                     userId: response.id,
                     userName: response.username,
                     userFullName: response.fullName,
-                    groups: response.groups
+                    groups: response.groups,
+                    userPassword: ''
                 };
 
                 // set Group

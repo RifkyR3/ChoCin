@@ -13,5 +13,5 @@
 import TopBar from "./TopBar.vue";
 import SideBar from "./SideBar.vue";
 
-import { useUiStore } from '@/stores'
+import { useUiStore } from '@/stores';
 </script>

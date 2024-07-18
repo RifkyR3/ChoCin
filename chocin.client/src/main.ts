@@ -54,7 +54,10 @@ app.use(LoadingPlugin, loadingOptions);
 
 app.use(ProfabricComponents);
 
-app.component('fa-icon', FontAwesomeIcon);
+// eslint-disable-next-line vue/multi-word-component-names
+app.component('fas', FontAwesomeIcon);
+
 app.component('empty-layout', EmptyLayout);
 app.component('default-layout', DefaultLayout);
+
 app.mount('#app');

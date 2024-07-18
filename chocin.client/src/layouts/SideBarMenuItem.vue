@@ -1,16 +1,16 @@
 <template>
     <li v-if="menuItem" class="nav-item" :class="{ 'menu-open': isMenuExtended }">
         <a class="nav-link" :class="{ 'active': isMainActive || isOneOfChildrenActive }" @click="handleMainMenuAction">
-            <fa-icon class="nav-icon mt-1" :icon=menuItem.icon v-if=menuItem.icon></fa-icon>
+            <fas class="nav-icon mt-1" :icon=menuItem.icon v-if=menuItem.icon></fas>
             <p>
                 {{ (menuItem.name) }}
-                <fa-icon v-if="isExpandable" class="nav-arrow" icon="chevron-right"></fa-icon>
+                <fas v-if="isExpandable" class="nav-arrow" icon="chevron-right"></fas>
             </p>
         </a>
         <ul class="nav nav-treeview" v-for="item in menuItem.children" :key="item.name">
             <li class="nav-item">
                 <router-link :to="item.path" class="nav-link" exact exact-active-class="active">
-                    <fa-icon class="nav-icon mt-1" :icon=item.icon v-if=item.icon></fa-icon>
+                    <fas class="nav-icon mt-1" :icon=item.icon v-if=item.icon></fas>
                     <p>{{ (item.name) }}</p>
                 </router-link>
             </li>
