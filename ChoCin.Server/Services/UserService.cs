@@ -62,6 +62,16 @@ namespace ChoCin.Server.Services
                 UserFullName = user.Name
             };
 
+            if (user.Groups?.Count > 0)
+            {
+                var groups = await this.dbContext
+                .CGroups
+                .Where(Q => user.Groups.Select(ug => ug.GroupId).Contains(Q.GroupId))
+                .ToListAsync();
+
+                add.Groups = groups;
+            }
+
             this.dbContext.CUsers.Add(add);
             var result = await dbContext.SaveChangesAsync();
             return result >= 0;
@@ -71,7 +81,7 @@ namespace ChoCin.Server.Services
         {
             var user = await this.dbContext
                 .CUsers
-                .AsNoTracking()
+                .Include(u => u.Groups)
                 .Where(q => q.UserId == id)
                 .FirstOrDefaultAsync();
 
@@ -80,7 +90,21 @@ namespace ChoCin.Server.Services
                 user.UserName = updateUser.UserName;
                 user.UserPassword = BCrypt.Net.BCrypt.HashPassword((string)updateUser.Password);
                 user.UserFullName = updateUser.Name;
+
+                if(user.Groups?.Count > 0) {
+                    user.Groups.Clear();
+                }
                 
+                if (updateUser.Groups?.Count > 0)
+                {
+                    var groups = await this.dbContext
+                    .CGroups
+                    .Where(Q => updateUser.Groups.Select(ug => ug.GroupId).Contains(Q.GroupId))
+                    .ToListAsync();
+
+                    user.Groups = groups;
+                }
+
                 dbContext.CUsers.Update(user);
                 var result = await dbContext.SaveChangesAsync();
                 return result >= 0;

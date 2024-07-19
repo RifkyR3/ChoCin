@@ -35,13 +35,13 @@
                                         </td>
                                         <td class="align-middle text-center">
                                             <button title="Edit User" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                class="btn btn-outline-success btn-sm"
-                                                v-on:click="btnEdit(value.userId)">
+                                                    class="btn btn-outline-success btn-sm"
+                                                    v-on:click="btnEdit(value.userId)">
                                                 <fas icon="pen-to-square"></fas>
                                             </button>
                                             <button title="Delete User" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                class="btn btn-outline-danger btn-sm pl-1"
-                                                v-on:click="btnDeleteUser(value.userId)">
+                                                    class="btn btn-outline-danger btn-sm pl-1"
+                                                    v-on:click="btnDeleteUser(value.userId)">
                                                 <fas icon="trash-can"></fas>
                                             </button>
                                         </td>
@@ -64,9 +64,7 @@
                 </div>
             </div>
         </div>
-
     </div>
-
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';

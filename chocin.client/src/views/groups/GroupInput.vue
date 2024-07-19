@@ -18,27 +18,24 @@
                                 <div class="mb-3">
                                     <label for="name" class="form-label">Name</label>
                                     <input id="name" name="name" type="text" class="form-control"
-                                        v-model="groupInput.groupName" required />
+                                           v-model="groupInput.groupName" required />
                                 </div>
                             </div>
 
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
-
                         </form>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
 import ContentHeader from '@components/ContentHeader.vue';
-import { GroupClient, type GroupModel} from '@/helpers/webApi';
+import { GroupClient, type GroupModel, AddUpdateGroup} from '@/helpers/webApi';
 import { useToast } from 'vue-toastification';
 
 const groupApi : GroupClient = new GroupClient();
@@ -46,7 +43,7 @@ const groupApi : GroupClient = new GroupClient();
 interface Data {
     group: GroupModel | null,
     groupId: number | null,
-    groupInput: GroupModel,
+    groupInput: AddUpdateGroup,
     inputRes: boolean,
 }
 
@@ -101,7 +98,7 @@ export default defineComponent({
         async doUpdate(groupId: number) {
             try {
                 await groupApi.updateGroup(groupId, this.groupInput);
-                
+
                 useToast().success('Successfully to update Group');
                 this.inputRes = true;
             } catch (e) {
@@ -116,7 +113,6 @@ export default defineComponent({
                 this.group = await groupApi.getGroupById(id);
 
                 this.groupInput = {
-                    groupId: this.group.groupId,
                     groupName: this.group.groupName
                 }
 

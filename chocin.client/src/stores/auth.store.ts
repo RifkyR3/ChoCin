@@ -87,6 +87,6 @@ export const useAuthStore = defineStore('auth', {
                 this.userGroupSelected = key;
                 this.userGroup = this.user.groups[this.userGroupSelected];
             }
-        } 
+        }
     }
 })

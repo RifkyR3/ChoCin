@@ -33,34 +33,43 @@
                                         v-model="userInput.password" required />
                                 </div>
 
+                                <div class="mb-3">
+                                    <label for="Groups" class="form-label">Groups</label>
+                                    <multiselect :options="groupCombo" :multiple="true" :taggable="true" track-by="id"
+                                        label="name" v-model="groupComboInput" />
+                                </div>
                             </div>
 
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button>
+                                &nbsp;
+                                <button type="button" v-on:click="btnBack" class="btn btn-warning">Back</button>
                             </div>
-
                         </form>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
 import ContentHeader from '@components/ContentHeader.vue';
-import { UserClient, type AddUpdateUser, type UserModel } from '@/helpers/webApi';
+import { UserClient, type AddUpdateUser, type GroupModel, type UserModel } from '@/helpers/webApi';
+import { GroupClient, type DropDownModel } from '@/helpers/webApi';
 import { useToast } from 'vue-toastification';
+import Multiselect from 'vue-multiselect';
 
 const userApi: UserClient = new UserClient();
+const groupApi: GroupClient = new GroupClient();
 
 interface Data {
     user: UserModel | null,
     userId: number | null,
     userInput: AddUpdateUser,
     inputRes: boolean,
+    groupCombo: DropDownModel[],
+    groupComboInput: DropDownModel[]
 }
 
 export default defineComponent({
@@ -72,23 +81,49 @@ export default defineComponent({
             userInput: {
                 name: '',
                 password: '',
-                userName: ''
-            }
+                userName: '',
+                groups: []
+            },
+            groupCombo: [],
+            groupComboInput: []
         }
     },
     components: {
         ContentHeader,
+        Multiselect
     },
     async mounted() {
+        let loader = this.$loading.show();
+
         const userId = this.$route.params.userId;
         if (userId) {
             this.userId = Number.parseInt(userId.toString());
             await this.getUserById(this.userId);
         }
+
+        await this.getGroupCombo();
+
+        loader.hide();
     },
     methods: {
         async onSubmit() {
             let loader = this.$loading.show();
+
+            let groups: GroupModel[] = [];
+
+            if (this.groupComboInput.length > 0) {
+
+                this.groupComboInput.forEach(input => {
+                    const tmpGroup = {
+                        groupId: input.id,
+                        groupName: input.name
+                    };
+
+                    groups.push(tmpGroup);
+                });
+            }
+
+            this.userInput.groups = groups;
 
             if (this.userId) {
                 await this.doUpdate(this.userId)
@@ -103,9 +138,8 @@ export default defineComponent({
         },
         async doAdd() {
             try {
-                const res = await userApi.addUser(this.userInput);
+                await userApi.addUser(this.userInput);
 
-                console.log(res);
                 useToast().success('Successfully to add User');
                 this.inputRes = true;
             } catch (e) {
@@ -115,8 +149,8 @@ export default defineComponent({
         },
         async doUpdate(userId: number) {
             try {
-                await userApi.updateUser(this.userInput, userId);
-                
+                await userApi.updateUser(userId, this.userInput);
+
                 useToast().success('Successfully to update User');
                 this.inputRes = true;
             } catch (e) {
@@ -125,24 +159,35 @@ export default defineComponent({
             }
         },
         async getUserById(id: number) {
-            let loader = this.$loading.show();
-
-            // console.log(this.userInput);
             try {
                 this.user = await userApi.getUserById(id);
 
                 this.userInput = {
                     name: this.user.userFullName == undefined ? '' : this.user.userFullName,
                     userName: this.user.userName,
-                    password: ''
+                    password: '',
+                    groups: this.user.groups
+                }
+
+                if (this.user.groups) {
+                    this.user.groups.forEach(val => {
+                        this.groupComboInput.push({
+                            id: val.groupId,
+                            name: val.groupName
+                        });
+                    });
                 }
 
             } catch (e) {
                 useToast().warning('Failed to get User');
             }
-
-            loader.hide();
-        }
+        },
+        async getGroupCombo() {
+            this.groupCombo = await groupApi.getComboGroup();
+        },
+        btnBack() {
+            this.$router.push('/users');
+        },
     },
 })
 </script>

@@ -337,7 +337,7 @@ export class GroupClient extends ApiBase implements IGroupClient {
     }
 
     getComboGroup(signal?: AbortSignal): Promise<DropDownModel[]> {
-        let url_ = this.baseUrl + "/combo-group";
+        let url_ = this.baseUrl + "/api/Group/getComboGroup";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -437,7 +437,7 @@ export interface IUserClient {
 
     getUserById(id: number): Promise<UserModel>;
 
-    updateUser(updateUser: AddUpdateUser, id: number): Promise<FileResponse>;
+    updateUser(id: number, updateUser: AddUpdateUser): Promise<FileResponse>;
 
     deleteUser(id: number): Promise<FileResponse>;
 }
@@ -573,7 +573,7 @@ export class UserClient extends ApiBase implements IUserClient {
         return Promise.resolve<UserModel>(null as any);
     }
 
-    updateUser(updateUser: AddUpdateUser, id: number, signal?: AbortSignal): Promise<FileResponse> {
+    updateUser(id: number, updateUser: AddUpdateUser, signal?: AbortSignal): Promise<FileResponse> {
         let url_ = this.baseUrl + "/api/User/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -714,6 +714,7 @@ export interface AddUpdateUser {
     name: string;
     userName: string;
     password: string;
+    groups: GroupModel[] | undefined;
 }
 
 export interface FileResponse {

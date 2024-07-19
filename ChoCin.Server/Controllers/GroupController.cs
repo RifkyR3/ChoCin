@@ -79,7 +79,7 @@ namespace ChoCin.Server.Controllers
             });
         }
 
-        [HttpGet("/combo-group", Name = "getComboGroup")]
+        [HttpGet("getComboGroup",Name = "getComboGroup")]
         public async Task<ActionResult<List<DropDownModel>>> GetComboGroup()
         {
             return await _groupService.GetComboGroup();

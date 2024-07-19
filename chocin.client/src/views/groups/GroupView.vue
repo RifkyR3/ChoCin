@@ -31,13 +31,13 @@
                                         </td>
                                         <td class="align-middle text-center">
                                             <button title="Edit Group" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                class="btn btn-outline-success btn-sm"
-                                                v-on:click="btnEdit(value.groupId)">
+                                                    class="btn btn-outline-success btn-sm"
+                                                    v-on:click="btnEdit(value.groupId)">
                                                 <fas icon="pen-to-square"></fas>
                                             </button>
                                             <button title="Delete Group" data-bs-toggle="tooltip"
-                                                data-bs-placement="top" class="btn btn-outline-danger btn-sm pl-1"
-                                                v-on:click="btnDelete(value.groupId)">
+                                                    data-bs-placement="top" class="btn btn-outline-danger btn-sm pl-1"
+                                                    v-on:click="btnDelete(value.groupId)">
                                                 <fas icon="trash-can"></fas>
                                             </button>
                                         </td>
@@ -55,7 +55,6 @@
             </div>
         </div>
     </div>
-
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';

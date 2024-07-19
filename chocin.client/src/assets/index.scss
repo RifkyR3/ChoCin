@@ -1,15 +1,16 @@
 @import "@fontsource/source-sans-3";
 @import 'overlayscrollbars/overlayscrollbars.css';
 
-@import 'vue-toastification/dist/index.css';
-@import 'vue-loading-overlay/dist/css/index.css';
-@import 'sweetalert2/dist/sweetalert2.min.css';
-
 // Import all of Bootstrap's CSS
 @import "./bootstrap.scss";
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 
 @import '~admin-lte/src/scss/adminlte.scss';
+
+@import 'vue-multiselect/dist/vue-multiselect.css';
+@import 'vue-toastification/dist/index.css';
+@import 'vue-loading-overlay/dist/css/index.css';
+@import 'sweetalert2/dist/sweetalert2.min.css';
 
 #app {
     width: 100vw;
