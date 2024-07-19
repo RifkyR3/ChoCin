@@ -10,4 +10,12 @@ export const groupRoutes: Array<RouteRecordRaw> = [
             requiresAuth: true
         }
     },
+    {
+        path: '/groups/input/:groupId(\\d+)?',
+        name: 'Group Input',
+        component: views.GroupInput,
+        meta: {
+            requiresAuth: true
+        }
+    },
 ]

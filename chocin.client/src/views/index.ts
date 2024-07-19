@@ -4,4 +4,4 @@ export { default as ErrorView } from './404View.vue';
 export { default as DashboardView } from './DashboardView.vue';
 
 export { UserView, UserInput } from './users';
-export { GroupView } from './groups';
+export { GroupView, GroupInput } from './groups';

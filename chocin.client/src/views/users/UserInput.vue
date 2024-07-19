@@ -115,7 +115,7 @@ export default defineComponent({
         },
         async doUpdate(userId: number) {
             try {
-                await userApi.updateUser(userId, this.userInput);
+                await userApi.updateUser(this.userInput, userId);
                 
                 useToast().success('Successfully to update User');
                 this.inputRes = true;
