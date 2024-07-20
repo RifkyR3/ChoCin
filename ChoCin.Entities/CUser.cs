@@ -6,19 +6,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ChoCin.Entities;
 
-[Table("c_user")]
+[Table("c_user", Schema = "default")]
+[Index("Username", Name = "c_user_pk_2", IsUnique = true)]
 public partial class CUser
 {
     [Key]
-    public int UserId { get; set; }
+    [Column("user_id")]
+    public Guid UserId { get; set; }
 
-    [StringLength(100)]
-    public string UserName { get; set; } = null!;
+    [Column("username")]
+    public string Username { get; set; } = null!;
 
-    [StringLength(100)]
+    [Column("user_password")]
     public string UserPassword { get; set; } = null!;
 
-    [StringLength(255)]
+    [Column("user_full_name")]
     public string? UserFullName { get; set; }
 
     [ForeignKey("UserId")]

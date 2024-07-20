@@ -75,7 +75,7 @@ export const useAuthStore = defineStore('auth', {
             useToast().warning("Your Session Expired. Please Signin Again.");
             return await router.push('/logout')
         },
-        async setUser(userId: number, token: string) {
+        async setUser(userId: string, token: string) {
             const apiUser: UserClient = new UserClient();
             apiUser.setAuthToken(token);
             this.user = await apiUser.getUserById(userId);

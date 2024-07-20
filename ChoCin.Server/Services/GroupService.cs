@@ -1,5 +1,6 @@
 ﻿using ChoCin.Entities;
 using ChoCin.Server.Models;
+using ChoCin.Server.Models.Form;
 using ChoCin.Server.Models.Group;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +29,7 @@ namespace ChoCin.Server.Services
                 .ToListAsync();
         }
 
-        public async Task<GroupModel?> GetGroupById(int id)
+        public async Task<GroupModel?> GetGroupById(Guid id)
         {
             return await this.dbContext
                 .CGroups
@@ -47,6 +48,7 @@ namespace ChoCin.Server.Services
         {
             var obj = new CGroup
             {
+                GroupId = Guid.NewGuid(),
                 GroupName = add.GroupName,
             };
 
@@ -55,7 +57,7 @@ namespace ChoCin.Server.Services
             return result >= 0;
         }
 
-        public async Task<bool> UpdateGroup(int id, AddUpdateGroup update)
+        public async Task<bool> UpdateGroup(Guid id, AddUpdateGroup update)
         {
             var group = await this.dbContext
                 .CGroups
@@ -72,7 +74,7 @@ namespace ChoCin.Server.Services
             return false;
         }
 
-        public async Task<bool> DeleteGroup(int id)
+        public async Task<bool> DeleteGroup(Guid id)
         {
             var group = await this.dbContext
                 .CGroups
@@ -95,13 +97,44 @@ namespace ChoCin.Server.Services
             return await this.dbContext
                 .CGroups
                 .AsNoTracking()
-                .OrderBy(O => O.GroupId)
+                .OrderBy(O => O.GroupName)
                 .Select(Q => new DropDownModel
                 {
                     Id = Q.GroupId,
                     Name = Q.GroupName
                 })
                 .ToListAsync();
+        }
+
+        public async Task<bool> AddGroupModule(GroupModuleForm form)
+        {
+            var group = await this.dbContext
+                .CGroups
+                .Include(G => G.Modules)
+                .AsNoTracking()
+                .Where(Q => Q.GroupId == form.GroupId)
+                .FirstOrDefaultAsync();
+
+            if (group != null)
+            {
+                if (group.Modules.Count > 0)
+                {
+                    group.Modules.Clear();
+                }
+
+                var modules = await this.dbContext
+                    .CModules
+                    .Where(Q => form.ModulesIds.Contains(Q.ModuleId))
+                    .ToListAsync();
+
+                group.Modules = modules;
+
+                this.dbContext.CGroups.Update(group);
+                var result = await dbContext.SaveChangesAsync();
+                return result >= 0;
+            }
+
+            return false;
         }
     }
 }

@@ -9,7 +9,7 @@ builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSet
 
 var services = new ProgramServices(builder.Services);
 services.RegisterServices();
-services.RegisterDatabase(builder.Configuration.GetConnectionString("ChocinDbContext"));
+services.RegisterDatabase(builder.Configuration.GetConnectionString("DbContext"));
 services.ConfigureServices();
 
 var app = builder.Build();

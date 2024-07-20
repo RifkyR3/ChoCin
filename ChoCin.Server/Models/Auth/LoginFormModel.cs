@@ -4,7 +4,7 @@ namespace ChoCin.Server.Models.Auth
 {
     public class LoginFormModel
     {
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
         [Display(Name = "Username")]
         [Required]

@@ -17,9 +17,71 @@ namespace ChoCin.Server.Controllers
             this._moduleService = moduleService;
         }
 
+        [HttpGet(Name = "getListModule")]
+        public async Task<ActionResult<List<ModuleModel>>> GetListModule()
+        {
+            return await _moduleService.GetModules();
+        }
+
+        [HttpGet("{id}", Name = "getModuleById")]
+        public async Task<ActionResult<ModuleModel>> GetModuleById(Guid id)
+        {
+            var user = await _moduleService.GetModuleById(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return user;
+        }
+
+        [HttpPost(Name = "addModule")]
+        public async Task<IActionResult> AddModule([FromBody] AddUpdateModule addModule)
+        {
+            if (!await _moduleService.AddModule(addModule))
+            {
+                return BadRequest();
+            }
+
+            return Ok(new
+            {
+                message = "Module Created Successfully"
+            });
+        }
+
+        [HttpPut]
+        [Route("{id}", Name = "updateModule")]
+        public async Task<IActionResult> UpdateModule([FromBody] AddUpdateModule updateModule, [FromRoute] Guid id)
+        {
+            if (!await _moduleService.UpdateModule(id, updateModule))
+            {
+                return BadRequest();
+            }
+
+            return Ok(new
+            {
+                message = "Module Updated Successfully"
+            });
+        }
+
+        [HttpDelete]
+        [Route("{id}", Name = "deleteModule")]
+        public async Task<IActionResult> DeleteModule([FromRoute] Guid id)
+        {
+            if (!await _moduleService.DeleteModule(id))
+            {
+                return BadRequest();
+            }
+
+            return Ok(new
+            {
+                message = "Module Deleted Successfully"
+            });
+        }
+
         [HttpGet]
-        [Route("{groupId}", Name = "getModuleByGroup")]
-        public async Task<ActionResult<List<ModuleModel>>> GetModuleByGroup([FromRoute] int groupId)
+        [Route("getModuleByGroup/{groupId}", Name = "getModuleByGroup")]
+        public async Task<ActionResult<List<ModuleModel>>> GetModuleByGroup([FromRoute] Guid groupId)
         {
             return await _moduleService.GetModuleByGroup(groupId);
         }

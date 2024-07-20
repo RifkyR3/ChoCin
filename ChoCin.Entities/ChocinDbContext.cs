@@ -19,64 +19,66 @@ public partial class ChocinDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder
-            .UseCollation("utf8mb4_0900_ai_ci")
-            .HasCharSet("utf8mb4");
-
         modelBuilder.Entity<CGroup>(entity =>
         {
-            entity.HasKey(e => e.GroupId).HasName("PRIMARY");
+            entity.HasKey(e => e.GroupId).HasName("c_group_pk");
+
+            entity.Property(e => e.GroupId).ValueGeneratedNever();
 
             entity.HasMany(d => d.Modules).WithMany(p => p.Groups)
                 .UsingEntity<Dictionary<string, object>>(
                     "CGroupModule",
                     r => r.HasOne<CModule>().WithMany()
                         .HasForeignKey("ModuleId")
-                        .HasConstraintName("c_group_module_ibfk_2"),
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("c_group_module_c_module_moduleid_fk"),
                     l => l.HasOne<CGroup>().WithMany()
                         .HasForeignKey("GroupId")
-                        .HasConstraintName("c_group_module_ibfk_1"),
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("c_group_module_c_group_groupid_fk"),
                     j =>
                     {
-                        j.HasKey("GroupId", "ModuleId")
-                            .HasName("PRIMARY")
-                            .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-                        j.ToTable("c_group_module");
-                        j.HasIndex(new[] { "GroupId" }, "GroupId");
-                        j.HasIndex(new[] { "ModuleId" }, "ModuleId");
+                        j.HasKey("GroupId", "ModuleId").HasName("c_group_module_pk");
+                        j.ToTable("c_group_module", "default");
+                        j.IndexerProperty<Guid>("GroupId").HasColumnName("group_id");
+                        j.IndexerProperty<Guid>("ModuleId").HasColumnName("module_id");
                     });
         });
 
         modelBuilder.Entity<CModule>(entity =>
         {
-            entity.HasKey(e => e.ModuleId).HasName("PRIMARY");
+            entity.HasKey(e => e.ModuleId).HasName("c_module_pk");
 
-            entity.HasOne(d => d.ModuleSub).WithMany(p => p.InverseModuleSub)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("c_module_ibfk_1");
+            entity.Property(e => e.ModuleId).ValueGeneratedNever();
+            entity.Property(e => e.ModuleOrder).HasDefaultValue(0);
+            entity.Property(e => e.ModulePath).HasDefaultValueSql("''::text");
+
+            entity.HasOne(d => d.ModuleSub).WithMany(p => p.InverseModuleSub).HasConstraintName("c_module_c_module_module_id_fk");
         });
 
         modelBuilder.Entity<CUser>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PRIMARY");
+            entity.HasKey(e => e.UserId).HasName("c_user_pk");
+
+            entity.Property(e => e.UserId).ValueGeneratedNever();
 
             entity.HasMany(d => d.Groups).WithMany(p => p.Users)
                 .UsingEntity<Dictionary<string, object>>(
                     "CUserGroup",
                     r => r.HasOne<CGroup>().WithMany()
                         .HasForeignKey("GroupId")
-                        .HasConstraintName("c_user_group_ibfk_4"),
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("c_user_group_c_group_groupid_fk"),
                     l => l.HasOne<CUser>().WithMany()
                         .HasForeignKey("UserId")
-                        .HasConstraintName("c_user_group_ibfk_3"),
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("c_user_group_c_user_userid_fk"),
                     j =>
                     {
-                        j.HasKey("UserId", "GroupId")
-                            .HasName("PRIMARY")
-                            .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
-                        j.ToTable("c_user_group");
-                        j.HasIndex(new[] { "GroupId" }, "GroupId");
-                        j.HasIndex(new[] { "UserId" }, "UserId");
+                        j.HasKey("UserId", "GroupId").HasName("c_user_group_pk");
+                        j.ToTable("c_user_group", "default");
+                        j.IndexerProperty<Guid>("UserId").HasColumnName("user_id");
+                        j.IndexerProperty<Guid>("GroupId").HasColumnName("group_id");
                     });
         });
 

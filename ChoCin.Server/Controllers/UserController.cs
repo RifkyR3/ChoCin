@@ -1,4 +1,5 @@
 ﻿using ChoCin.Server.Helpers;
+using ChoCin.Server.Models.Form;
 using ChoCin.Server.Models.User;
 using ChoCin.Server.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ namespace ChoCin.Server.Controllers
         }
 
         [HttpGet("{id}", Name = "getUserById")]
-        public async Task<ActionResult<UserModel>> GetUserById(int id)
+        public async Task<ActionResult<UserModel>> GetUserById(Guid id)
         {
             var user = await _userService.GetUserById(id);
             if (user == null)
@@ -51,7 +52,7 @@ namespace ChoCin.Server.Controllers
 
         [HttpPut]
         [Route("{id}", Name = "updateUser")]
-        public async Task<IActionResult> UpdateUser([FromBody] AddUpdateUser updateUser, [FromRoute] int id)
+        public async Task<IActionResult> UpdateUser([FromBody] AddUpdateUser updateUser, [FromRoute] Guid id)
         {
             if (!await _userService.UpdateUser(id, updateUser))
             {
@@ -66,7 +67,7 @@ namespace ChoCin.Server.Controllers
 
         [HttpDelete]
         [Route("{id}", Name = "deleteUser")]
-        public async Task<IActionResult> DeleteUser([FromRoute] int id)
+        public async Task<IActionResult> DeleteUser([FromRoute] Guid id)
         {
             if (!await _userService.DeleteUser(id))
             {

@@ -1,4 +1,5 @@
 ﻿using ChoCin.Entities;
+using ChoCin.Server.Models.Form;
 using ChoCin.Server.Models.Group;
 using ChoCin.Server.Models.User;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,7 @@ namespace ChoCin.Server.Services
                 {
                     UserFullName = Q.UserFullName,
                     UserId = Q.UserId,
-                    UserName = Q.UserName,
+                    UserName = Q.Username,
                     Groups = Q.Groups.Select(G => new GroupModel
                     {
                         GroupId = G.GroupId,
@@ -33,7 +34,7 @@ namespace ChoCin.Server.Services
                 }).ToListAsync();
         }
 
-        public async Task<UserModel?> GetUserById(int id)
+        public async Task<UserModel?> GetUserById(Guid id)
         {
             return await this.dbContext
                 .CUsers
@@ -41,9 +42,9 @@ namespace ChoCin.Server.Services
                 .Select(
                 Q => new UserModel
                 {
-                    UserFullName = Q.UserName,
+                    UserFullName = Q.UserFullName,
                     UserId = Q.UserId,
-                    UserName = Q.UserName,
+                    UserName = Q.Username,
                     Groups = Q.Groups.Select(G => new GroupModel
                     {
                         GroupId = G.GroupId,
@@ -57,7 +58,8 @@ namespace ChoCin.Server.Services
         {
             var add = new CUser()
             {
-                UserName = user.UserName,
+                UserId = Guid.NewGuid(),
+                Username = user.UserName,
                 UserPassword = BCrypt.Net.BCrypt.HashPassword(user.Password),
                 UserFullName = user.Name
             };
@@ -77,7 +79,7 @@ namespace ChoCin.Server.Services
             return result >= 0;
         }
 
-        public async Task<bool> UpdateUser(int id, AddUpdateUser updateUser)
+        public async Task<bool> UpdateUser(Guid id, AddUpdateUser updateUser)
         {
             var user = await this.dbContext
                 .CUsers
@@ -87,7 +89,7 @@ namespace ChoCin.Server.Services
 
             if (user != null)
             {
-                user.UserName = updateUser.UserName;
+                user.Username = updateUser.UserName;
                 user.UserPassword = BCrypt.Net.BCrypt.HashPassword((string)updateUser.Password);
                 user.UserFullName = updateUser.Name;
 
@@ -112,7 +114,7 @@ namespace ChoCin.Server.Services
             return false;
         }
 
-        public async Task<bool> DeleteUser(int id)
+        public async Task<bool> DeleteUser(Guid id)
         {
             var user = await this.dbContext
                 .CUsers

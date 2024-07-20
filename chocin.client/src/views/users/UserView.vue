@@ -1,66 +1,60 @@
 <template>
-    <ContentHeader title="Users" class="mb-2" />
-    <div class="app-content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
 
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                List User
-                            </h3>
-                            <div class="card-tools">
-                                <button type="button" class="btn btn-tool btn-outline-primary" @click="btnAddUser">
-                                    <fas icon="plus"></fas>
-                                    Add User
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="card-body">
-                            <table class="table table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 3%; text-align: center;">#</th>
-                                        <th style="width: 10%;">&nbsp;</th>
-                                        <th>Username</th>
-                                        <th>Name</th>
-                                        <th>Groups</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr v-for="value in users" :key="value.userId">
-                                        <td class="align-middle text-center">
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            <button title="Edit User" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    class="btn btn-outline-success btn-sm"
-                                                    v-on:click="btnEdit(value.userId)">
-                                                <fas icon="pen-to-square"></fas>
-                                            </button>
-                                            <button title="Delete User" data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    class="btn btn-outline-danger btn-sm pl-1"
-                                                    v-on:click="btnDeleteUser(value.userId)">
-                                                <fas icon="trash-can"></fas>
-                                            </button>
-                                        </td>
-                                        <td class="align-middle">
-                                            {{ value.userName }}
-                                        </td>
-                                        <td class="align-middle">
-                                            {{ value.userFullName }}
-                                        </td>
-                                        <td class="align-middle">
-                                            {{ value.groups?.map(e => e.groupName).join(', ') }}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="card-footer">
-                        </div>
+                <div class="card-header">
+                    <h3 class="card-title">
+                        List User
+                    </h3>
+                    <div class="card-tools">
+                        <button type="button" class="btn btn-tool btn-outline-primary" @click="btnAddUser">
+                            <fas icon="plus"></fas>
+                            Add User
+                        </button>
                     </div>
+                </div>
+
+                <div class="card-body">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th style="width: 3%; text-align: center;">#</th>
+                                <th style="width: 10%;">&nbsp;</th>
+                                <th>Username</th>
+                                <th>Name</th>
+                                <th>Groups</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="value in users" :key="value.userId">
+                                <td class="align-middle text-center">
+                                </td>
+                                <td class="align-middle text-center">
+                                    <button title="Edit User" data-bs-toggle="tooltip" data-bs-placement="top"
+                                        class="btn btn-outline-success btn-sm" v-on:click="btnEdit(value.userId)">
+                                        <fas icon="pen-to-square"></fas>
+                                    </button>
+                                    <button title="Delete User" data-bs-toggle="tooltip" data-bs-placement="top"
+                                        class="btn btn-outline-danger btn-sm pl-1"
+                                        v-on:click="btnDeleteUser(value.userId)">
+                                        <fas icon="trash-can"></fas>
+                                    </button>
+                                </td>
+                                <td class="align-middle">
+                                    {{ value.userName }}
+                                </td>
+                                <td class="align-middle">
+                                    {{ value.userFullName }}
+                                </td>
+                                <td class="align-middle">
+                                    {{ value.groups?.map(e => e.groupName).join(', ') }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="card-footer">
                 </div>
             </div>
         </div>
@@ -68,7 +62,6 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import ContentHeader from '@components/ContentHeader.vue';
 import { UserClient, type UserModel } from '@/helpers/webApi';
 import Swal from 'sweetalert2';
 import { useToast } from 'vue-toastification';
@@ -86,7 +79,6 @@ export default defineComponent({
         }
     },
     components: {
-        ContentHeader
     },
     created() {
         // fetch the data when the view is created and the data is
@@ -108,7 +100,7 @@ export default defineComponent({
         btnAddUser() {
             this.$router.push('/users/input/');
         },
-        async btnDeleteUser(userId: number) {
+        async btnDeleteUser(userId: string) {
             Swal.fire({
                 title: "Are you sure?",
                 icon: "warning",
@@ -121,7 +113,7 @@ export default defineComponent({
                 }
             });
         },
-        async doDeleteUser(userId: number) {
+        async doDeleteUser(userId: string) {
             let loader = this.$loading.show();
             let res: boolean = true;
             try {
@@ -141,7 +133,7 @@ export default defineComponent({
 
             loader.hide();
         },
-        btnEdit(userId: number) {
+        btnEdit(userId: string) {
             this.$router.push('/users/input/' + userId);
         }
     }

@@ -28,7 +28,7 @@ namespace ChoCin.Server.Services
             var tmpUser = await this._context
                 .CUsers
                 .AsNoTracking()
-                .Where(q => q.UserName == model.UserName)
+                .Where(q => q.Username == model.UserName)
                 .FirstOrDefaultAsync();
 
             if (tmpUser == null) { return null; }
@@ -48,7 +48,7 @@ namespace ChoCin.Server.Services
                 .Select(Q => new JwtAuthResponse
                 {
                     Id = Q.UserId,
-                    Username = Q.UserName,
+                    Username = Q.Username,
                     FullName = Q.UserFullName,
                     Token = token,
                     Groups = Q.Groups
@@ -82,7 +82,7 @@ namespace ChoCin.Server.Services
         }
 
         // helper methods
-        private async Task<string> generateJwtToken(int userId)
+        private async Task<string> generateJwtToken(Guid userId)
         {
             //Generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();

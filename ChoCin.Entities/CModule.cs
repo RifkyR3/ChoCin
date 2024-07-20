@@ -6,24 +6,26 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ChoCin.Entities;
 
-[Table("c_module")]
-[Index("ModuleSubId", Name = "ModuleSubId")]
+[Table("c_module", Schema = "default")]
 public partial class CModule
 {
     [Key]
-    public int ModuleId { get; set; }
+    [Column("module_id")]
+    public Guid ModuleId { get; set; }
 
-    public int? ModuleSubId { get; set; }
+    [Column("module_sub_id")]
+    public Guid? ModuleSubId { get; set; }
 
-    [StringLength(100)]
+    [Column("module_name")]
     public string ModuleName { get; set; } = null!;
 
-    [StringLength(100)]
+    [Column("module_icon")]
     public string? ModuleIcon { get; set; }
 
-    [StringLength(100)]
+    [Column("module_path")]
     public string ModulePath { get; set; } = null!;
 
+    [Column("module_order")]
     public int ModuleOrder { get; set; }
 
     [InverseProperty("ModuleSub")]

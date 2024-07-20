@@ -2,6 +2,7 @@
 using ChoCin.Server.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using NSwag;
 using NSwag.Generation.Processors.Security;
 using System.Net;
@@ -29,7 +30,12 @@ namespace ChoCin.Server
         {
             this._services.AddDbContext<ChocinDbContext>(options =>
             {
-                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+                options.UseNpgsql(connectionString, strategy =>
+                {
+                    strategy.EnableRetryOnFailure();
+                })
+                .ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.QueryPossibleUnintendedUseOfEqualsWarning))
+                .EnableSensitiveDataLogging(true);
             });
         }
 

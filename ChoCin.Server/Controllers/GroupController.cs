@@ -1,5 +1,6 @@
 ﻿using ChoCin.Server.Helpers;
 using ChoCin.Server.Models;
+using ChoCin.Server.Models.Form;
 using ChoCin.Server.Models.Group;
 using ChoCin.Server.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -27,7 +28,7 @@ namespace ChoCin.Server.Controllers
         }
 
         [HttpGet("{id}", Name = "getGroupById")]
-        public async Task<ActionResult<GroupModel>> GetGroupById(int id)
+        public async Task<ActionResult<GroupModel>> GetGroupById(Guid id)
         {
             var group = await this._groupService.GetGroupById(id);
             if (group == null)
@@ -52,7 +53,7 @@ namespace ChoCin.Server.Controllers
         }
 
         [HttpPut("{id}", Name = "updateGroup")]
-        public async Task<IActionResult> UpdateGroup(int id, [FromBody] AddUpdateGroup value)
+        public async Task<IActionResult> UpdateGroup(Guid id, [FromBody] AddUpdateGroup value)
         {
             if (!await _groupService.UpdateGroup(id, value))
             {
@@ -66,7 +67,7 @@ namespace ChoCin.Server.Controllers
         }
 
         [HttpDelete("{id}", Name = "deleteGroup")]
-        public async Task<IActionResult> DeleteGroup(int id)
+        public async Task<IActionResult> DeleteGroup(Guid id)
         {
             if (!await _groupService.DeleteGroup(id))
             {
@@ -83,6 +84,20 @@ namespace ChoCin.Server.Controllers
         public async Task<ActionResult<List<DropDownModel>>> GetComboGroup()
         {
             return await _groupService.GetComboGroup();
+        }
+
+        [HttpPost("addGroupModule", Name = "addGroupModule")]
+        public async Task<IActionResult> AddGroupModule([FromBody] GroupModuleForm value)
+        {
+            if (!await _groupService.AddGroupModule(value))
+            {
+                return BadRequest();
+            }
+
+            return Ok(new
+            {
+                message = "Module Added to Group Successfully"
+            });
         }
     }
 }

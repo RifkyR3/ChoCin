@@ -104,13 +104,15 @@ export interface IGroupClient {
 
     addGroup(value: AddUpdateGroup): Promise<FileResponse>;
 
-    getGroupById(id: number): Promise<GroupModel>;
+    getGroupById(id: string): Promise<GroupModel>;
 
-    updateGroup(id: number, value: AddUpdateGroup): Promise<FileResponse>;
+    updateGroup(id: string, value: AddUpdateGroup): Promise<FileResponse>;
 
-    deleteGroup(id: number): Promise<FileResponse>;
+    deleteGroup(id: string): Promise<FileResponse>;
 
     getComboGroup(): Promise<DropDownModel[]>;
+
+    addGroupModule(value: GroupModuleForm): Promise<FileResponse>;
 }
 
 export class GroupClient extends ApiBase implements IGroupClient {
@@ -205,7 +207,7 @@ export class GroupClient extends ApiBase implements IGroupClient {
         return Promise.resolve<FileResponse>(null as any);
     }
 
-    getGroupById(id: number, signal?: AbortSignal): Promise<GroupModel> {
+    getGroupById(id: string, signal?: AbortSignal): Promise<GroupModel> {
         let url_ = this.baseUrl + "/api/Group/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -244,7 +246,7 @@ export class GroupClient extends ApiBase implements IGroupClient {
         return Promise.resolve<GroupModel>(null as any);
     }
 
-    updateGroup(id: number, value: AddUpdateGroup, signal?: AbortSignal): Promise<FileResponse> {
+    updateGroup(id: string, value: AddUpdateGroup, signal?: AbortSignal): Promise<FileResponse> {
         let url_ = this.baseUrl + "/api/Group/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -292,7 +294,7 @@ export class GroupClient extends ApiBase implements IGroupClient {
         return Promise.resolve<FileResponse>(null as any);
     }
 
-    deleteGroup(id: number, signal?: AbortSignal): Promise<FileResponse> {
+    deleteGroup(id: string, signal?: AbortSignal): Promise<FileResponse> {
         let url_ = this.baseUrl + "/api/Group/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -371,11 +373,66 @@ export class GroupClient extends ApiBase implements IGroupClient {
         }
         return Promise.resolve<DropDownModel[]>(null as any);
     }
+
+    addGroupModule(value: GroupModuleForm, signal?: AbortSignal): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/Group/addGroupModule";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(value);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processAddGroupModule(_response));
+        });
+    }
+
+    protected processAddGroupModule(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(null as any);
+    }
 }
 
 export interface IModuleClient {
 
-    getModuleByGroup(groupId: number): Promise<ModuleModel[]>;
+    getListModule(): Promise<ModuleModel[]>;
+
+    addModule(addModule: AddUpdateModule): Promise<FileResponse>;
+
+    getModuleById(id: string): Promise<ModuleModel>;
+
+    updateModule(id: string, updateModule: AddUpdateModule): Promise<FileResponse>;
+
+    deleteModule(id: string): Promise<FileResponse>;
+
+    getModuleByGroup(groupId: string): Promise<ModuleModel[]>;
 }
 
 export class ModuleClient extends ApiBase implements IModuleClient {
@@ -389,8 +446,220 @@ export class ModuleClient extends ApiBase implements IModuleClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    getModuleByGroup(groupId: number, signal?: AbortSignal): Promise<ModuleModel[]> {
-        let url_ = this.baseUrl + "/api/Module/{groupId}";
+    getListModule(signal?: AbortSignal): Promise<ModuleModel[]> {
+        let url_ = this.baseUrl + "/api/Module";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetListModule(_response));
+        });
+    }
+
+    protected processGetListModule(response: Response): Promise<ModuleModel[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ModuleModel[];
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ModuleModel[]>(null as any);
+    }
+
+    addModule(addModule: AddUpdateModule, signal?: AbortSignal): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/Module";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(addModule);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processAddModule(_response));
+        });
+    }
+
+    protected processAddModule(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(null as any);
+    }
+
+    getModuleById(id: string, signal?: AbortSignal): Promise<ModuleModel> {
+        let url_ = this.baseUrl + "/api/Module/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetModuleById(_response));
+        });
+    }
+
+    protected processGetModuleById(response: Response): Promise<ModuleModel> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ModuleModel;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ModuleModel>(null as any);
+    }
+
+    updateModule(id: string, updateModule: AddUpdateModule, signal?: AbortSignal): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/Module/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(updateModule);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            signal,
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processUpdateModule(_response));
+        });
+    }
+
+    protected processUpdateModule(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(null as any);
+    }
+
+    deleteModule(id: string, signal?: AbortSignal): Promise<FileResponse> {
+        let url_ = this.baseUrl + "/api/Module/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            signal,
+            headers: {
+                "Accept": "application/octet-stream"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processDeleteModule(_response));
+        });
+    }
+
+    protected processDeleteModule(response: Response): Promise<FileResponse> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<FileResponse>(null as any);
+    }
+
+    getModuleByGroup(groupId: string, signal?: AbortSignal): Promise<ModuleModel[]> {
+        let url_ = this.baseUrl + "/api/Module/getModuleByGroup/{groupId}";
         if (groupId === undefined || groupId === null)
             throw new Error("The parameter 'groupId' must be defined.");
         url_ = url_.replace("{groupId}", encodeURIComponent("" + groupId));
@@ -435,11 +704,11 @@ export interface IUserClient {
 
     addUser(addUser: AddUpdateUser): Promise<FileResponse>;
 
-    getUserById(id: number): Promise<UserModel>;
+    getUserById(id: string): Promise<UserModel>;
 
-    updateUser(id: number, updateUser: AddUpdateUser): Promise<FileResponse>;
+    updateUser(id: string, updateUser: AddUpdateUser): Promise<FileResponse>;
 
-    deleteUser(id: number): Promise<FileResponse>;
+    deleteUser(id: string): Promise<FileResponse>;
 }
 
 export class UserClient extends ApiBase implements IUserClient {
@@ -534,7 +803,7 @@ export class UserClient extends ApiBase implements IUserClient {
         return Promise.resolve<FileResponse>(null as any);
     }
 
-    getUserById(id: number, signal?: AbortSignal): Promise<UserModel> {
+    getUserById(id: string, signal?: AbortSignal): Promise<UserModel> {
         let url_ = this.baseUrl + "/api/User/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -573,7 +842,7 @@ export class UserClient extends ApiBase implements IUserClient {
         return Promise.resolve<UserModel>(null as any);
     }
 
-    updateUser(id: number, updateUser: AddUpdateUser, signal?: AbortSignal): Promise<FileResponse> {
+    updateUser(id: string, updateUser: AddUpdateUser, signal?: AbortSignal): Promise<FileResponse> {
         let url_ = this.baseUrl + "/api/User/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -621,7 +890,7 @@ export class UserClient extends ApiBase implements IUserClient {
         return Promise.resolve<FileResponse>(null as any);
     }
 
-    deleteUser(id: number, signal?: AbortSignal): Promise<FileResponse> {
+    deleteUser(id: string, signal?: AbortSignal): Promise<FileResponse> {
         let url_ = this.baseUrl + "/api/User/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -667,7 +936,7 @@ export class UserClient extends ApiBase implements IUserClient {
 }
 
 export interface JwtAuthResponse {
-    id: number;
+    id: string;
     fullName: string | undefined;
     username: string;
     token: string;
@@ -676,12 +945,12 @@ export interface JwtAuthResponse {
 }
 
 export interface GroupModel {
-    groupId: number;
+    groupId: string;
     groupName: string;
 }
 
 export interface ModuleModel {
-    id: number;
+    id: string;
     name: string;
     icon: string | undefined;
     path: string | undefined;
@@ -698,12 +967,25 @@ export interface AddUpdateGroup {
 }
 
 export interface DropDownModel {
-    id: number;
+    id: string;
     name: string;
 }
 
+export interface GroupModuleForm {
+    groupId: string;
+    modulesIds: string[];
+}
+
+export interface AddUpdateModule {
+    name: string;
+    icon: string | undefined;
+    path: string | undefined;
+    order: number;
+    subModuleId: string | undefined;
+}
+
 export interface UserModel {
-    userId: number;
+    userId: string;
     userName: string;
     userPassword: string;
     userFullName: string | undefined;

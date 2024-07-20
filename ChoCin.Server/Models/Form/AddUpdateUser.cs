@@ -1,7 +1,7 @@
 ﻿using ChoCin.Server.Models.Group;
 using System.ComponentModel.DataAnnotations;
 
-namespace ChoCin.Server.Models.User
+namespace ChoCin.Server.Models.Form
 {
     public class AddUpdateUser
     {

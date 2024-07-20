@@ -45,7 +45,7 @@ namespace ChoCin.Server.Helpers
                 }, out SecurityToken validatedToken);
 
                 var jwtToken = (JwtSecurityToken)validatedToken;
-                var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
+                Guid userId = new Guid(jwtToken.Claims.First(x => x.Type == "id").Value);
 
                 //Attach user to context on successful JWT validation
                 context.Items["User"] = await userService.GetUserById(userId);

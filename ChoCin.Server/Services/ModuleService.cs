@@ -13,7 +13,162 @@ namespace ChoCin.Server.Services
             this.dbContext = dbContext;
         }
 
-        public async Task<List<ModuleModel>> GetModuleByGroup(int groupId)
+        public async Task<List<ModuleModel>> GetModules()
+        {
+            return await this.dbContext
+                .CModules
+                .AsNoTracking()
+                .Where(W =>
+                    W.ModuleSubId == null
+                )
+                .OrderBy(O => O.ModuleOrder)
+                .Select(Q => new ModuleModel
+                {
+                    Id = Q.ModuleId,
+                    Name = Q.ModuleName,
+                    Icon = Q.ModuleIcon,
+                    Path = Q.ModulePath,
+                    Children = Q.InverseModuleSub
+                        .OrderBy(OC => OC.ModuleOrder)
+                        .Select(QC => new ModuleModel
+                        {
+                            Id = QC.ModuleId,
+                            Name = QC.ModuleName,
+                            Icon = QC.ModuleIcon,
+                            Path = QC.ModulePath,
+                        }).ToList()
+                })
+                .ToListAsync();
+        }
+
+        public async Task<ModuleModel?> GetModuleById(Guid id)
+        {
+            return await this.dbContext
+                .CModules
+                .AsNoTracking()
+                .Where(W =>
+                    W.ModuleId == id
+                )
+                .OrderBy(O => O.ModuleOrder)
+                .Select(Q => new ModuleModel
+                {
+                    Id = Q.ModuleId,
+                    Name = Q.ModuleName,
+                    Icon = Q.ModuleIcon,
+                    Path = Q.ModulePath,
+                    Children = Q.InverseModuleSub
+                        .OrderBy(OC => OC.ModuleOrder)
+                        .Select(QC => new ModuleModel
+                        {
+                            Id = QC.ModuleId,
+                            Name = QC.ModuleName,
+                            Icon = QC.ModuleIcon,
+                            Path = QC.ModulePath,
+                        }).ToList()
+                })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> AddModule(AddUpdateModule module)
+        {
+            string pathModule = string.Empty;
+            if (!string.IsNullOrEmpty(module.Path))
+            {
+                pathModule = module.Path;
+            }
+
+            CModule add = new CModule
+            {
+                ModuleId = Guid.NewGuid(),
+                ModuleName = module.Name,
+                ModuleIcon = module.Icon,
+                ModulePath = pathModule,
+                ModuleOrder = module.Order,
+            };
+
+            if (module.SubModuleId != Guid.Empty)
+            {
+                var subModule = await this.dbContext
+                    .CModules
+                    .Where(Q => Q.ModuleId == module.SubModuleId)
+                    .FirstOrDefaultAsync();
+
+                if (subModule != null)
+                {
+                    add.ModuleSub = subModule;
+                }
+            }
+
+            this.dbContext.CModules.Add(add);
+            var result = await dbContext.SaveChangesAsync();
+            return result >= 0;
+        }
+
+        public async Task<bool> UpdateModule(Guid id, AddUpdateModule module)
+        {
+            var update = await this.dbContext
+                .CModules
+                .Where(Q => Q.ModuleId == id)
+                .FirstOrDefaultAsync();
+
+            if (update != null)
+            {
+                string pathModule = string.Empty; ;
+                if (!string.IsNullOrEmpty(module.Path))
+                {
+                    pathModule = module.Path;
+                }
+
+                update.ModuleName = module.Name;
+                update.ModuleIcon = module.Icon;
+                update.ModulePath = pathModule;
+                update.ModuleOrder = module.Order;
+
+                if (update.ModuleSub != null)
+                {
+                    update.ModuleSub = null;
+                }
+
+                if (module.SubModuleId != Guid.Empty)
+                {
+                    var subModule = await this.dbContext
+                    .CModules
+                    .Where(Q => Q.ModuleId == module.SubModuleId)
+                    .FirstOrDefaultAsync();
+
+                    if (subModule != null)
+                    {
+                        update.ModuleSub = subModule;
+                    }
+                }
+
+                dbContext.CModules.Update(update);
+                var result = await dbContext.SaveChangesAsync();
+                return result >= 0;
+            }
+
+            return false;
+        }
+
+        public async Task<bool> DeleteModule(Guid id)
+        {
+            var module = await this.dbContext
+                .CModules
+                .AsNoTracking()
+                .Where(q => q.ModuleId == id)
+                .FirstOrDefaultAsync();
+
+            if (module != null)
+            {
+                this.dbContext.CModules.Remove(module);
+                var result = await dbContext.SaveChangesAsync();
+                return result >= 0;
+            }
+
+            return false;
+        }
+
+        public async Task<List<ModuleModel>> GetModuleByGroup(Guid groupId)
         {
             return await this.dbContext
                 .CModules

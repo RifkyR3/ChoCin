@@ -6,13 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ChoCin.Entities;
 
-[Table("c_group")]
+[Table("c_group", Schema = "default")]
 public partial class CGroup
 {
     [Key]
-    public int GroupId { get; set; }
+    [Column("group_id")]
+    public Guid GroupId { get; set; }
 
-    [StringLength(100)]
+    [Column("group_name")]
     public string GroupName { get; set; } = null!;
 
     [ForeignKey("GroupId")]

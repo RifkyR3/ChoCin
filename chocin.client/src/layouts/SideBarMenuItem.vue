@@ -9,7 +9,7 @@
         </a>
         <ul class="nav nav-treeview" v-for="item in menuItem.children" :key="item.name">
             <li class="nav-item">
-                <router-link :to="item.path" class="nav-link" exact exact-active-class="active">
+                <router-link :to="item.path" class="nav-link" active-class="active">
                     <fas class="nav-icon mt-1" :icon=item.icon v-if=item.icon></fas>
                     <p>{{ (item.name) }}</p>
                 </router-link>
@@ -18,6 +18,7 @@
     </li>
 </template>
 <script lang='ts'>
+
 interface DataMenuItem {
     isMenuExtended: boolean,
     isExpandable: boolean,
@@ -40,10 +41,12 @@ export default {
             this.menuItem.children &&
             this.menuItem.children.length > 0;
         if (this.$router.currentRoute && this.$router.currentRoute.value) {
-            this.calculateIsActive(this.$router.currentRoute.value.path);
+            const path = this.$router.currentRoute.value.path;
+            this.calculateIsActive(path);
         }
         this.$router.afterEach((to) => {
-            this.calculateIsActive(to.path);
+            const path = to.path;
+            this.calculateIsActive(path);
         });
     },
     methods: {
@@ -64,7 +67,7 @@ export default {
             this.isOneOfChildrenActive = false;
             if (this.isExpandable) {
                 this.menuItem.children.forEach((item: any) => {
-                    if (item.path === url) {
+                    if (this.isChild(item.path)) {
                         this.isOneOfChildrenActive = true;
                         this.isMenuExtended = true;
                     }
@@ -76,6 +79,12 @@ export default {
                 this.isMenuExtended = false;
             }
         },
+
+        isChild(path: string) {
+            return this.$route.matched.map((item) => {
+                return item.path;
+            }).includes(path);
+        }
     }
 }
 </script>

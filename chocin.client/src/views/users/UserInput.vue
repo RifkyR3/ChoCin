@@ -1,60 +1,54 @@
 <template>
-    <ContentHeader title="Users" class="mb-2" />
-    <div class="app-content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
 
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                Add User
-                            </h3>
+                <div class="card-header">
+                    <h3 class="card-title">
+                        Add User
+                    </h3>
+                </div>
+
+                <form @submit.prevent="onSubmit">
+
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input id="name" name="name" type="text" class="form-control" v-model="userInput.name"
+                                required />
                         </div>
 
-                        <form @submit.prevent="onSubmit">
+                        <div class="mb-3">
+                            <label for="Username" class="form-label">Username</label>
+                            <input id="username" name="username" type="text" class="form-control"
+                                v-model="userInput.userName" required />
+                        </div>
 
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label for="name" class="form-label">Name</label>
-                                    <input id="name" name="name" type="text" class="form-control"
-                                        v-model="userInput.name" required />
-                                </div>
+                        <div class="mb-3">
+                            <label for="Password" class="form-label">Password</label>
+                            <input id="password" name="password" type="password" class="form-control"
+                                v-model="userInput.password" required />
+                        </div>
 
-                                <div class="mb-3">
-                                    <label for="Username" class="form-label">Username</label>
-                                    <input id="username" name="username" type="text" class="form-control"
-                                        v-model="userInput.userName" required />
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="Password" class="form-label">Password</label>
-                                    <input id="password" name="password" type="password" class="form-control"
-                                        v-model="userInput.password" required />
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="Groups" class="form-label">Groups</label>
-                                    <multiselect :options="groupCombo" :multiple="true" :taggable="true" track-by="id"
-                                        label="name" v-model="groupComboInput" />
-                                </div>
-                            </div>
-
-                            <div class="card-footer">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                                &nbsp;
-                                <button type="button" v-on:click="btnBack" class="btn btn-warning">Back</button>
-                            </div>
-                        </form>
+                        <div class="mb-3">
+                            <label for="Groups" class="form-label">Groups</label>
+                            <multiselect :options="groupCombo" :multiple="true" :taggable="true" track-by="id"
+                                label="name" v-model="groupComboInput" />
+                        </div>
                     </div>
-                </div>
+
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        &nbsp;
+                        <button type="button" v-on:click="btnBack" class="btn btn-warning">Back</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import ContentHeader from '@components/ContentHeader.vue';
 import { UserClient, type AddUpdateUser, type GroupModel, type UserModel } from '@/helpers/webApi';
 import { GroupClient, type DropDownModel } from '@/helpers/webApi';
 import { useToast } from 'vue-toastification';
@@ -65,7 +59,7 @@ const groupApi: GroupClient = new GroupClient();
 
 interface Data {
     user: UserModel | null,
-    userId: number | null,
+    userId: string | null,
     userInput: AddUpdateUser,
     inputRes: boolean,
     groupCombo: DropDownModel[],
@@ -89,7 +83,6 @@ export default defineComponent({
         }
     },
     components: {
-        ContentHeader,
         Multiselect
     },
     async mounted() {
@@ -97,7 +90,7 @@ export default defineComponent({
 
         const userId = this.$route.params.userId;
         if (userId) {
-            this.userId = Number.parseInt(userId.toString());
+            this.userId = userId.toString();
             await this.getUserById(this.userId);
         }
 
@@ -147,7 +140,7 @@ export default defineComponent({
                 this.inputRes = false;
             }
         },
-        async doUpdate(userId: number) {
+        async doUpdate(userId: string) {
             try {
                 await userApi.updateUser(userId, this.userInput);
 
@@ -158,7 +151,7 @@ export default defineComponent({
                 this.inputRes = false;
             }
         },
-        async getUserById(id: number) {
+        async getUserById(id: string) {
             try {
                 this.user = await userApi.getUserById(id);
 
