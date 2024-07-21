@@ -136,6 +136,7 @@ f24e5381-be99-4e61-8157-74e3f3097059	2f6cc482-ffeb-46af-af7e-2407379bc059
 f24e5381-be99-4e61-8157-74e3f3097059	48d3e0c6-daf4-481c-9d92-c101b35e8416
 f24e5381-be99-4e61-8157-74e3f3097059	bc065026-bad1-4802-9858-e926686aaadf
 f24e5381-be99-4e61-8157-74e3f3097059	ee1df381-b515-4ead-9bb1-fe8d765c9ce2
+f24e5381-be99-4e61-8157-74e3f3097059	f5f969ea-a4bc-4517-8675-549a02d9bd70
 \.
 
 
@@ -148,6 +149,7 @@ COPY "default".c_module (module_id, module_sub_id, module_name, module_icon, mod
 bc065026-bad1-4802-9858-e926686aaadf	\N	App Management	fa-gear		10
 ee1df381-b515-4ead-9bb1-fe8d765c9ce2	bc065026-bad1-4802-9858-e926686aaadf	Users	fa-users	/users	11
 2f6cc482-ffeb-46af-af7e-2407379bc059	bc065026-bad1-4802-9858-e926686aaadf	Groups	fa-user-group	/groups	12
+f5f969ea-a4bc-4517-8675-549a02d9bd70	bc065026-bad1-4802-9858-e926686aaadf	Modules	folder	/modules	13
 \.
 
 

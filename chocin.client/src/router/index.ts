@@ -5,6 +5,7 @@ import * as views from '@/views';
 
 import { userRoutes } from './user.router';
 import { groupRoutes } from './group.router';
+import { moduleRoutes } from './module.router';
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -17,6 +18,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     ...userRoutes,
     ...groupRoutes,
+    ...moduleRoutes,
     {
         path: '/login',
         name: 'Login',

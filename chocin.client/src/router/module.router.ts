@@ -2,12 +2,12 @@ import { type RouteRecordRaw } from 'vue-router';
 import * as views from '@/views';
 import IndexRouteView from '@components/IndexRouteView.vue';
 
-const mainUrl = '/groups';
+const mainUrl = '/modules';
 
-export const groupRoutes: Array<RouteRecordRaw> = [
+export const moduleRoutes: Array<RouteRecordRaw> = [
     {
         path: mainUrl,
-        name: 'Index Groups',
+        name: 'Index Modules',
         component: IndexRouteView,
         meta: {
             requiresAuth: true
@@ -15,16 +15,16 @@ export const groupRoutes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: '',
-                name: 'Groups',
-                component: views.GroupView,
+                name: 'Modules',
+                component: views.ModuleView,
                 meta: {
                     requiresAuth: true
                 }
             },
             {
-                path: 'input/:groupId?',
-                name: 'Group Input',
-                component: views.GroupInput,
+                path: 'input/:moduleId?',
+                name: 'Module Input',
+                component: views.ModuleInput,
                 meta: {
                     requiresAuth: true
                 }

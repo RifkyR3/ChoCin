@@ -111,8 +111,6 @@ export interface IGroupClient {
     deleteGroup(id: string): Promise<FileResponse>;
 
     getComboGroup(): Promise<DropDownModel[]>;
-
-    addGroupModule(value: GroupModuleForm): Promise<FileResponse>;
 }
 
 export class GroupClient extends ApiBase implements IGroupClient {
@@ -373,51 +371,6 @@ export class GroupClient extends ApiBase implements IGroupClient {
         }
         return Promise.resolve<DropDownModel[]>(null as any);
     }
-
-    addGroupModule(value: GroupModuleForm, signal?: AbortSignal): Promise<FileResponse> {
-        let url_ = this.baseUrl + "/api/Group/addGroupModule";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(value);
-
-        let options_: RequestInit = {
-            body: content_,
-            method: "POST",
-            signal,
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/octet-stream"
-            }
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.transformResult(url_, _response, (_response: Response) => this.processAddGroupModule(_response));
-        });
-    }
-
-    protected processAddGroupModule(response: Response): Promise<FileResponse> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200 || status === 206) {
-            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
-            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
-            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
-            if (fileName) {
-                fileName = decodeURIComponent(fileName);
-            } else {
-                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
-                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
-            }
-            return response.blob().then(blob => { return { fileName: fileName, data: blob, status: status, headers: _headers }; });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<FileResponse>(null as any);
-    }
 }
 
 export interface IModuleClient {
@@ -433,6 +386,10 @@ export interface IModuleClient {
     deleteModule(id: string): Promise<FileResponse>;
 
     getModuleByGroup(groupId: string): Promise<ModuleModel[]>;
+
+    getComboMainModule(): Promise<DropDownModel[]>;
+
+    getModuleTree(): Promise<ModuleModel[]>;
 }
 
 export class ModuleClient extends ApiBase implements IModuleClient {
@@ -681,6 +638,78 @@ export class ModuleClient extends ApiBase implements IModuleClient {
     }
 
     protected processGetModuleByGroup(response: Response): Promise<ModuleModel[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ModuleModel[];
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ModuleModel[]>(null as any);
+    }
+
+    getComboMainModule(signal?: AbortSignal): Promise<DropDownModel[]> {
+        let url_ = this.baseUrl + "/api/Module/getComboMainModule";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetComboMainModule(_response));
+        });
+    }
+
+    protected processGetComboMainModule(response: Response): Promise<DropDownModel[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as DropDownModel[];
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<DropDownModel[]>(null as any);
+    }
+
+    getModuleTree(signal?: AbortSignal): Promise<ModuleModel[]> {
+        let url_ = this.baseUrl + "/api/Module/getModuleTree";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            signal,
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.http.fetch(url_, transformedOptions_);
+        }).then((_response: Response) => {
+            return this.transformResult(url_, _response, (_response: Response) => this.processGetModuleTree(_response));
+        });
+    }
+
+    protected processGetModuleTree(response: Response): Promise<ModuleModel[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -947,6 +976,7 @@ export interface JwtAuthResponse {
 export interface GroupModel {
     groupId: string;
     groupName: string;
+    groupModuleIds: string[] | undefined;
 }
 
 export interface ModuleModel {
@@ -954,6 +984,8 @@ export interface ModuleModel {
     name: string;
     icon: string | undefined;
     path: string | undefined;
+    order: number;
+    subId: string | undefined;
     children: ModuleModel[] | undefined;
 }
 
@@ -964,16 +996,12 @@ export interface JwtLoginFormModel {
 
 export interface AddUpdateGroup {
     groupName: string;
+    moduleIds: string[] | undefined;
 }
 
 export interface DropDownModel {
     id: string;
     name: string;
-}
-
-export interface GroupModuleForm {
-    groupId: string;
-    modulesIds: string[];
 }
 
 export interface AddUpdateModule {

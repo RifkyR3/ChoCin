@@ -1,4 +1,5 @@
 ﻿using ChoCin.Entities;
+using ChoCin.Server.Models;
 using ChoCin.Server.Models.Module;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,9 +19,6 @@ namespace ChoCin.Server.Services
             return await this.dbContext
                 .CModules
                 .AsNoTracking()
-                .Where(W =>
-                    W.ModuleSubId == null
-                )
                 .OrderBy(O => O.ModuleOrder)
                 .Select(Q => new ModuleModel
                 {
@@ -28,15 +26,8 @@ namespace ChoCin.Server.Services
                     Name = Q.ModuleName,
                     Icon = Q.ModuleIcon,
                     Path = Q.ModulePath,
-                    Children = Q.InverseModuleSub
-                        .OrderBy(OC => OC.ModuleOrder)
-                        .Select(QC => new ModuleModel
-                        {
-                            Id = QC.ModuleId,
-                            Name = QC.ModuleName,
-                            Icon = QC.ModuleIcon,
-                            Path = QC.ModulePath,
-                        }).ToList()
+                    Order = Q.ModuleOrder,
+                    SubId = Q.ModuleSubId
                 })
                 .ToListAsync();
         }
@@ -56,15 +47,8 @@ namespace ChoCin.Server.Services
                     Name = Q.ModuleName,
                     Icon = Q.ModuleIcon,
                     Path = Q.ModulePath,
-                    Children = Q.InverseModuleSub
-                        .OrderBy(OC => OC.ModuleOrder)
-                        .Select(QC => new ModuleModel
-                        {
-                            Id = QC.ModuleId,
-                            Name = QC.ModuleName,
-                            Icon = QC.ModuleIcon,
-                            Path = QC.ModulePath,
-                        }).ToList()
+                    Order = Q.ModuleOrder,
+                    SubId = Q.ModuleSubId
                 })
                 .FirstOrDefaultAsync();
         }
@@ -124,9 +108,9 @@ namespace ChoCin.Server.Services
                 update.ModulePath = pathModule;
                 update.ModuleOrder = module.Order;
 
-                if (update.ModuleSub != null)
+                if (update.ModuleSubId != null)
                 {
-                    update.ModuleSub = null;
+                    update.ModuleSubId = null;
                 }
 
                 if (module.SubModuleId != Guid.Empty)
@@ -184,6 +168,52 @@ namespace ChoCin.Server.Services
                     Name = Q.ModuleName,
                     Icon = Q.ModuleIcon,
                     Path = Q.ModulePath,
+                    Order = Q.ModuleOrder,
+                    Children = Q.InverseModuleSub
+                        .Where(Q => Q.Groups.Select(Q => Q.GroupId).Contains(groupId))
+                        .OrderBy(OC => OC.ModuleOrder)
+                        .Select(QC => new ModuleModel
+                        {
+                            Id = QC.ModuleId,
+                            Name = QC.ModuleName,
+                            Icon = QC.ModuleIcon,
+                            Path = QC.ModulePath,
+                            Order = QC.ModuleOrder,
+                        }).ToList()
+                })
+                .ToListAsync();
+        }
+
+        public async Task<List<DropDownModel>> GetComboMainModule()
+        {
+            return await this.dbContext
+            .CModules
+            .Where(W => W.ModuleSub == null)
+            .OrderBy(O => O.ModuleOrder)
+            .Select(Q => new DropDownModel
+            {
+                Id = Q.ModuleId,
+                Name = Q.ModuleName
+            })
+            .AsNoTracking()
+            .ToListAsync();
+        }
+
+        public async Task<List<ModuleModel>> GetModuleTree()
+        {
+            return await this.dbContext
+                .CModules
+                .Where(W => W.ModuleSub == null)
+                .AsNoTracking()
+                .OrderBy(O => O.ModuleOrder)
+                .Select(Q => new ModuleModel
+                {
+                    Id = Q.ModuleId,
+                    Name = Q.ModuleName,
+                    Icon = Q.ModuleIcon,
+                    Path = Q.ModulePath,
+                    Order = Q.ModuleOrder,
+                    SubId = Q.ModuleSubId,
                     Children = Q.InverseModuleSub
                         .OrderBy(OC => OC.ModuleOrder)
                         .Select(QC => new ModuleModel
@@ -192,6 +222,7 @@ namespace ChoCin.Server.Services
                             Name = QC.ModuleName,
                             Icon = QC.ModuleIcon,
                             Path = QC.ModulePath,
+                            SubId = QC.ModuleSubId
                         }).ToList()
                 })
                 .ToListAsync();

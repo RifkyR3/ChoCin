@@ -93,10 +93,11 @@ namespace ChoCin.Server.Services
                 user.UserPassword = BCrypt.Net.BCrypt.HashPassword((string)updateUser.Password);
                 user.UserFullName = updateUser.Name;
 
-                if(user.Groups?.Count > 0) {
+                if (user.Groups?.Count > 0)
+                {
                     user.Groups.Clear();
                 }
-                
+
                 if (updateUser.Groups?.Count > 0)
                 {
                     var groups = await this.dbContext

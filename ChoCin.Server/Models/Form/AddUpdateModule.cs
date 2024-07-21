@@ -6,12 +6,13 @@ namespace ChoCin.Server.Models.Module
     {
         [Required]
         public string Name { get; set; }
+
         public string? Icon { get; set; }
         public string? Path { get; set; }
+
         [Required]
         public int Order { get; set; }
-        [Required]
-        public bool IsShowNav { get; set; }
+
         public Guid? SubModuleId { get; set; }
     }
 }

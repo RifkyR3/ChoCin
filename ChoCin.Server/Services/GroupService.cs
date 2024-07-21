@@ -39,7 +39,8 @@ namespace ChoCin.Server.Services
                 .Select(Q => new GroupModel
                 {
                     GroupId = Q.GroupId,
-                    GroupName = Q.GroupName
+                    GroupName = Q.GroupName,
+                    GroupModuleIds = Q.Modules.Select(QM => QM.ModuleId).ToList()
                 })
                 .FirstOrDefaultAsync();
         }
@@ -52,6 +53,16 @@ namespace ChoCin.Server.Services
                 GroupName = add.GroupName,
             };
 
+            if (add.ModuleIds != null && add.ModuleIds.Count > 0)
+            {
+                var modules = await this.dbContext
+                .CModules
+                .Where(Q => add.ModuleIds.Contains(Q.ModuleId))
+                .ToListAsync();
+
+                obj.Modules = modules;
+            }
+
             this.dbContext.CGroups.Add(obj);
             var result = await dbContext.SaveChangesAsync();
             return result >= 0;
@@ -61,13 +72,30 @@ namespace ChoCin.Server.Services
         {
             var group = await this.dbContext
                 .CGroups
-                .AsNoTracking()
-                .Where(q => q.GroupId == id)
+                .Include(G => G.Modules)
+                .Where(Q => Q.GroupId == id)
                 .FirstOrDefaultAsync();
 
             if (group != null)
             {
                 group.GroupName = update.GroupName;
+
+                if (group.Modules?.Count > 0)
+                {
+                    group.Modules.Clear();
+                }
+
+                if (update.ModuleIds?.Count > 0)
+                {
+                    var modules = await this.dbContext
+                    .CModules
+                    .Where(Q => update.ModuleIds.Contains(Q.ModuleId))
+                    .ToListAsync();
+
+                    group.Modules = modules;
+                }
+
+                this.dbContext.CGroups.Update(group);
                 var result = await dbContext.SaveChangesAsync();
                 return result >= 0;
             }
@@ -104,37 +132,6 @@ namespace ChoCin.Server.Services
                     Name = Q.GroupName
                 })
                 .ToListAsync();
-        }
-
-        public async Task<bool> AddGroupModule(GroupModuleForm form)
-        {
-            var group = await this.dbContext
-                .CGroups
-                .Include(G => G.Modules)
-                .AsNoTracking()
-                .Where(Q => Q.GroupId == form.GroupId)
-                .FirstOrDefaultAsync();
-
-            if (group != null)
-            {
-                if (group.Modules.Count > 0)
-                {
-                    group.Modules.Clear();
-                }
-
-                var modules = await this.dbContext
-                    .CModules
-                    .Where(Q => form.ModulesIds.Contains(Q.ModuleId))
-                    .ToListAsync();
-
-                group.Modules = modules;
-
-                this.dbContext.CGroups.Update(group);
-                var result = await dbContext.SaveChangesAsync();
-                return result >= 0;
-            }
-
-            return false;
         }
     }
 }

@@ -15,7 +15,32 @@
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
                             <input id="name" name="name" type="text" class="form-control" v-model="groupInput.groupName"
-                                required />
+                                   required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="modules" class="form-label">Modules</label>
+
+                            <div v-for="module in moduleTree" v-bind:key="module.id">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" :id="module.id" v-model="groupInput.moduleIds"
+                                           :value="module.id">
+                                    <label class="form-check-label" :for="module.id">
+                                        <fas :icon="module.icon" v-if="module.icon"></fas> {{ module.name }}
+                                    </label>
+                                </div>
+
+                                <div class="ms-4" v-if="module.children">
+                                    <div class="form-check" v-for="children in module.children"
+                                         v-bind:key="children.id">
+                                        <input class="form-check-input" type="checkbox" :id="children.id"
+                                               v-model="groupInput.moduleIds" :value="children.id">
+                                        <label class="form-check-label" :for="children.id">
+                                            <fas :icon="children.icon" v-if="children.icon"></fas> {{ children.name }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -32,15 +57,20 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { GroupClient, type GroupModel, type AddUpdateGroup } from '@/helpers/webApi';
+import { ModuleClient, type ModuleModel } from '@/helpers/webApi';
 import { useToast } from 'vue-toastification';
+import { useUiStore } from '@/stores';
 
 const groupApi: GroupClient = new GroupClient();
+const moduleApi: ModuleClient = new ModuleClient();
 
 interface Data {
     group: GroupModel | null,
     groupId: string | null,
     groupInput: AddUpdateGroup,
     inputRes: boolean,
+    chackbox: string[] | null,
+    moduleTree: ModuleModel[] | null
 }
 
 export default defineComponent({
@@ -50,13 +80,18 @@ export default defineComponent({
             groupId: null,
             inputRes: false,
             groupInput: {
-                groupName: ''
-            }
+                groupName: '',
+                moduleIds: []
+            },
+            moduleTree: [],
+            chackbox: []
         }
     },
     components: {
     },
     async mounted() {
+        await this.getModuleTree();
+
         const groupId = this.$route.params.groupId;
         if (groupId) {
             this.groupId = groupId.toString();
@@ -93,6 +128,8 @@ export default defineComponent({
             try {
                 await groupApi.updateGroup(groupId, this.groupInput);
 
+                useUiStore().refreshNavigation = true;
+
                 useToast().success('Successfully to update Group');
                 this.inputRes = true;
             } catch (e) {
@@ -107,7 +144,8 @@ export default defineComponent({
                 this.group = await groupApi.getGroupById(id);
 
                 this.groupInput = {
-                    groupName: this.group.groupName
+                    groupName: this.group.groupName,
+                    moduleIds: this.group.groupModuleIds
                 }
 
             } catch (e) {
@@ -119,6 +157,9 @@ export default defineComponent({
         btnBack() {
             this.$router.push('/groups');
         },
+        async getModuleTree() {
+            this.moduleTree = await moduleApi.getModuleTree();
+        }
     },
 })
 </script>

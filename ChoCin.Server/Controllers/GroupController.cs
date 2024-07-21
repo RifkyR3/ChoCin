@@ -80,24 +80,10 @@ namespace ChoCin.Server.Controllers
             });
         }
 
-        [HttpGet("getComboGroup",Name = "getComboGroup")]
+        [HttpGet("getComboGroup", Name = "getComboGroup")]
         public async Task<ActionResult<List<DropDownModel>>> GetComboGroup()
         {
             return await _groupService.GetComboGroup();
-        }
-
-        [HttpPost("addGroupModule", Name = "addGroupModule")]
-        public async Task<IActionResult> AddGroupModule([FromBody] GroupModuleForm value)
-        {
-            if (!await _groupService.AddGroupModule(value))
-            {
-                return BadRequest();
-            }
-
-            return Ok(new
-            {
-                message = "Module Added to Group Successfully"
-            });
         }
     }
 }

@@ -34,6 +34,9 @@ export default defineComponent({
     created() {
         this.checkMenuItem();
     },
+    mounted() {
+        this.checkMenuItem();
+    },
     watch: {
         // call again the method if the route changes
         '$route': 'checkMenuItem'
@@ -45,19 +48,22 @@ export default defineComponent({
         async checkMenuItem() {
             const uiStore = useUiStore();
 
-            if (!this.menu && useAuthStore().authenticate) {
+            if ((!this.menu && useAuthStore().authenticate) || uiStore.refreshNavigation) {
 
-                if (!uiStore.sideBarNavigation) {
+                if (!uiStore.sideBarNavigation || uiStore.refreshNavigation) {
                     let loader = this.$loading.show({
                         color: 'red'
                     });
 
                     await uiStore.getModule();
 
+                    uiStore.refreshNavigation = false;
+
                     loader.hide();
                 }
-                this.menu = uiStore.sideBarNavigation;
             }
+
+            this.menu = uiStore.sideBarNavigation;
         }
     }
 });

@@ -11,12 +11,14 @@ export const useUiStore = defineStore('ui', {
     state: () => {
         return {
             sideBarState: sideBarStatus.open,
-            sideBarNavigation: null as ModuleModel[] | null
+            sideBarNavigation: null as ModuleModel[] | null,
+            refreshNavigation: false
         }
     },
     persist: {
         paths: [
-            'sideBarNavigation'
+            'sideBarNavigation',
+            'refreshNavigation'
         ]
     },
 

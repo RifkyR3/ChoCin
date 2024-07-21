@@ -6,6 +6,8 @@
         public string Name { get; set; }
         public string? Icon { get; set; }
         public string? Path { get; set; }
+        public int Order { get; set; }
+        public Guid? SubId { get; set; }
         public virtual List<ModuleModel>? Children { get; set; }
     }
 }

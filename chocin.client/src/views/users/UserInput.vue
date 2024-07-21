@@ -5,7 +5,7 @@
 
                 <div class="card-header">
                     <h3 class="card-title">
-                        Add User
+                        User Input
                     </h3>
                 </div>
 
@@ -15,25 +15,25 @@
                         <div class="mb-3">
                             <label for="name" class="form-label">Name</label>
                             <input id="name" name="name" type="text" class="form-control" v-model="userInput.name"
-                                required />
+                                   required />
                         </div>
 
                         <div class="mb-3">
                             <label for="Username" class="form-label">Username</label>
                             <input id="username" name="username" type="text" class="form-control"
-                                v-model="userInput.userName" required />
+                                   v-model="userInput.userName" required />
                         </div>
 
                         <div class="mb-3">
                             <label for="Password" class="form-label">Password</label>
                             <input id="password" name="password" type="password" class="form-control"
-                                v-model="userInput.password" required />
+                                   v-model="userInput.password" required />
                         </div>
 
                         <div class="mb-3">
                             <label for="Groups" class="form-label">Groups</label>
                             <multiselect :options="groupCombo" :multiple="true" :taggable="true" track-by="id"
-                                label="name" v-model="groupComboInput" />
+                                         label="name" v-model="groupComboInput" />
                         </div>
                     </div>
 
@@ -107,9 +107,10 @@ export default defineComponent({
             if (this.groupComboInput.length > 0) {
 
                 this.groupComboInput.forEach(input => {
-                    const tmpGroup = {
+                    const tmpGroup:GroupModel = {
                         groupId: input.id,
-                        groupName: input.name
+                        groupName: input.name,
+                        groupModuleIds: undefined
                     };
 
                     groups.push(tmpGroup);

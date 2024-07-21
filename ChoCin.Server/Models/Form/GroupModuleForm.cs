@@ -6,6 +6,7 @@ namespace ChoCin.Server.Models.Form
     {
         [Required]
         public Guid GroupId { get; set; }
+
         [Required]
         public List<Guid> ModulesIds { get; set; }
     }

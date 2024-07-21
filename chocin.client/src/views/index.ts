@@ -5,3 +5,4 @@ export { default as DashboardView } from './DashboardView.vue';
 
 export * from './users';
 export * from './groups';
+export * from './modules';

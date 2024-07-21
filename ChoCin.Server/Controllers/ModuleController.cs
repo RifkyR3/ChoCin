@@ -1,4 +1,5 @@
 ﻿using ChoCin.Server.Helpers;
+using ChoCin.Server.Models;
 using ChoCin.Server.Models.Module;
 using ChoCin.Server.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -84,6 +85,20 @@ namespace ChoCin.Server.Controllers
         public async Task<ActionResult<List<ModuleModel>>> GetModuleByGroup([FromRoute] Guid groupId)
         {
             return await _moduleService.GetModuleByGroup(groupId);
+        }
+
+        [HttpGet]
+        [Route("getComboMainModule", Name = "getComboMainModule")]
+        public async Task<ActionResult<List<DropDownModel>>> GetComboMainModule()
+        {
+            return await _moduleService.GetComboMainModule();
+        }
+
+        [HttpGet]
+        [Route("getModuleTree", Name = "getModuleTree")]
+        public async Task<ActionResult<List<ModuleModel>>> GetModuleTree()
+        {
+            return await _moduleService.GetModuleTree();
         }
     }
 }
