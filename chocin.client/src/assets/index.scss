@@ -23,3 +23,9 @@
     outline: none;
     cursor: pointer;
 }
+
+.table td.fit, 
+.table th.fit {
+   white-space: nowrap;
+   width: 1%;
+}

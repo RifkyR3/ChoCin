@@ -17,16 +17,16 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th style="width: 3%;">#</th>
-                                <th style="width: 5%;">&nbsp;</th>
+                                <th class="text-center fit">#</th>
+                                <th class="fit">&nbsp;</th>
                                 <th>Name</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="value in datas" :key="value.groupId">
-                                <td class="align-middle text-center">
+                                <td class="align-middle text-center fit">
                                 </td>
-                                <td class="align-middle text-center">
+                                <td class="align-middle text-center fit">
                                     <button title="Edit Group" data-bs-toggle="tooltip" data-bs-placement="top"
                                             class="btn btn-outline-success btn-sm" v-on:click="btnEdit(value.groupId)">
                                         <fas icon="pen-to-square"></fas>

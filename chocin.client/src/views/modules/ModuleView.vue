@@ -17,8 +17,8 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th style="width: 3%; text-align: center;">#</th>
-                                <th style="width: 5%;">&nbsp;</th>
+                                <th class="text-center fit">#</th>
+                                <th class="fit">&nbsp;</th>
                                 <th>Name</th>
                                 <th>Icon</th>
                                 <th>Path</th>
@@ -27,9 +27,9 @@
                         </thead>
                         <tbody>
                             <tr v-for="value in datas" :key="value.id">
-                                <td class="align-middle text-center">
+                                <td class="align-middle text-center fit">
                                 </td>
-                                <td class="align-middle text-center">
+                                <td class="align-middle text-center fit">
                                     <button title="Edit Group" data-bs-toggle="tooltip" data-bs-placement="top"
                                             class="btn btn-outline-success btn-sm" v-on:click="btnEdit(value.id)">
                                         <fas icon="pen-to-square"></fas>

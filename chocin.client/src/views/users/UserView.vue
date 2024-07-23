@@ -19,8 +19,8 @@
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th style="width: 3%; text-align: center;">#</th>
-                                <th style="width: 10%;">&nbsp;</th>
+                                <th class="text-center fit">#</th>
+                                <th class="fit">&nbsp;</th>
                                 <th>Username</th>
                                 <th>Name</th>
                                 <th>Groups</th>
@@ -28,9 +28,9 @@
                         </thead>
                         <tbody>
                             <tr v-for="value in users" :key="value.userId">
-                                <td class="align-middle text-center">
+                                <td class="align-middle text-center fit">
                                 </td>
-                                <td class="align-middle text-center">
+                                <td class="align-middle text-center fit">
                                     <button title="Edit User" data-bs-toggle="tooltip" data-bs-placement="top"
                                             class="btn btn-outline-success btn-sm" v-on:click="btnEdit(value.userId)">
                                         <fas icon="pen-to-square"></fas>
