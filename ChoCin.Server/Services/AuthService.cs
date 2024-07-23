@@ -16,11 +16,13 @@ namespace ChoCin.Server.Services
     {
         private readonly ChocinDbContext _context;
         private readonly AppSettings _appSettings;
+        private readonly ModuleService _moduleService;
 
         public AuthService(ChocinDbContext context, IOptions<AppSettings> appSettings)
         {
             this._context = context;
             _appSettings = appSettings.Value;
+            this._moduleService = new ModuleService(this._context);
         }
 
         public async Task<JwtAuthResponse?> Authenticate(JwtLoginFormModel model)
@@ -41,7 +43,7 @@ namespace ChoCin.Server.Services
             // authentication successful so generate jwt token
             var token = await generateJwtToken(tmpUser.UserId);
 
-            var response = await this._context
+            JwtAuthResponse response = await this._context
                 .CUsers
                 .AsNoTracking()
                 .Where(W => W.UserId == tmpUser.UserId)
@@ -56,28 +58,15 @@ namespace ChoCin.Server.Services
                         {
                             GroupId = G.GroupId,
                             GroupName = G.GroupName,
-                        }).ToList(),
-                    Modules = Q.Groups.OrderBy(G => G.GroupId).First()
-                        .Modules
-                        .Where(M => M.ModuleSubId == null)
-                        .OrderBy(M => M.ModuleOrder)
-                        .Select(QM => new ModuleModel
-                        {
-                            Id = QM.ModuleId,
-                            Name = QM.ModuleName,
-                            Icon = QM.ModuleIcon,
-                            Path = QM.ModulePath,
-                            Children = QM.InverseModuleSub
-                                .OrderBy(M => M.ModuleOrder)
-                                .Select(QC => new ModuleModel
-                                {
-                                    Id = QC.ModuleId,
-                                    Name = QC.ModuleName,
-                                    Icon = QC.ModuleIcon,
-                                    Path = QC.ModulePath,
-                                }).ToList()
                         }).ToList()
-                }).FirstOrDefaultAsync();
+                }).FirstAsync();
+
+            if(response.Groups?.Count > 0)
+            {
+                List<ModuleModel> modules = await this._moduleService.GetModuleByGroup(response.Groups.Select(G => G.GroupId).First());
+                response.Modules = modules;
+            }
+
             return response;
         }
 
