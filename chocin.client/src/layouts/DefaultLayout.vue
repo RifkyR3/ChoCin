@@ -14,4 +14,13 @@ import TopBar from "./TopBar.vue";
 import SideBar from "./SideBar.vue";
 
 import { useUiStore } from '@/stores';
+
+import { onMounted } from "vue";
+import { Tooltip } from 'bootstrap'
+
+onMounted(() => {
+    new Tooltip(document.body, {
+      selector: "[data-bs-toggle='tooltip']",
+    })
+});
 </script>

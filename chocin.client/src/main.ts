@@ -1,6 +1,5 @@
 import './assets/index.scss';
 
-import 'bootstrap';
 import 'admin-lte/src/ts/adminlte';
 
 import { createApp } from 'vue';
