@@ -16,16 +16,17 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+DROP DATABASE IF EXISTS chocin;
 --
--- Name: chocin_app; Type: DATABASE; Schema: -; Owner: postgres
+-- Name: chocin; Type: DATABASE; Schema: -; Owner: postgres
 --
 
-CREATE DATABASE chocin_app WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'English_Indonesia.1252';
+CREATE DATABASE chocin WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'English_Indonesia.1252';
 
 
-ALTER DATABASE chocin_app OWNER TO postgres;
+ALTER DATABASE chocin OWNER TO postgres;
 
-\connect chocin_app
+\connect chocin
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -121,54 +122,44 @@ ALTER TABLE "default".c_user_group OWNER TO postgres;
 -- Data for Name: c_group; Type: TABLE DATA; Schema: default; Owner: postgres
 --
 
-COPY "default".c_group (group_id, group_name) FROM stdin;
-ea3aad56-caa8-451c-8bd6-63d10c6cf2e7	User
-f24e5381-be99-4e61-8157-74e3f3097059	Admin
-\.
+INSERT INTO "default".c_group VALUES ('ea3aad56-caa8-451c-8bd6-63d10c6cf2e7', 'User');
+INSERT INTO "default".c_group VALUES ('f24e5381-be99-4e61-8157-74e3f3097059', 'Admin');
 
 
 --
 -- Data for Name: c_group_module; Type: TABLE DATA; Schema: default; Owner: postgres
 --
 
-COPY "default".c_group_module (group_id, module_id) FROM stdin;
-f24e5381-be99-4e61-8157-74e3f3097059	2f6cc482-ffeb-46af-af7e-2407379bc059
-f24e5381-be99-4e61-8157-74e3f3097059	48d3e0c6-daf4-481c-9d92-c101b35e8416
-f24e5381-be99-4e61-8157-74e3f3097059	bc065026-bad1-4802-9858-e926686aaadf
-f24e5381-be99-4e61-8157-74e3f3097059	ee1df381-b515-4ead-9bb1-fe8d765c9ce2
-f24e5381-be99-4e61-8157-74e3f3097059	f5f969ea-a4bc-4517-8675-549a02d9bd70
-\.
+INSERT INTO "default".c_group_module VALUES ('f24e5381-be99-4e61-8157-74e3f3097059', '2f6cc482-ffeb-46af-af7e-2407379bc059');
+INSERT INTO "default".c_group_module VALUES ('f24e5381-be99-4e61-8157-74e3f3097059', '48d3e0c6-daf4-481c-9d92-c101b35e8416');
+INSERT INTO "default".c_group_module VALUES ('f24e5381-be99-4e61-8157-74e3f3097059', 'bc065026-bad1-4802-9858-e926686aaadf');
+INSERT INTO "default".c_group_module VALUES ('f24e5381-be99-4e61-8157-74e3f3097059', 'ee1df381-b515-4ead-9bb1-fe8d765c9ce2');
+INSERT INTO "default".c_group_module VALUES ('f24e5381-be99-4e61-8157-74e3f3097059', 'f5f969ea-a4bc-4517-8675-549a02d9bd70');
 
 
 --
 -- Data for Name: c_module; Type: TABLE DATA; Schema: default; Owner: postgres
 --
 
-COPY "default".c_module (module_id, module_sub_id, module_name, module_icon, module_path, module_order) FROM stdin;
-48d3e0c6-daf4-481c-9d92-c101b35e8416	\N	Dashboard	fa-gauge-high	/	1
-bc065026-bad1-4802-9858-e926686aaadf	\N	App Management	fa-gear		10
-ee1df381-b515-4ead-9bb1-fe8d765c9ce2	bc065026-bad1-4802-9858-e926686aaadf	Users	fa-users	/users	11
-2f6cc482-ffeb-46af-af7e-2407379bc059	bc065026-bad1-4802-9858-e926686aaadf	Groups	fa-user-group	/groups	12
-f5f969ea-a4bc-4517-8675-549a02d9bd70	bc065026-bad1-4802-9858-e926686aaadf	Modules	folder	/modules	13
-\.
+INSERT INTO "default".c_module VALUES ('48d3e0c6-daf4-481c-9d92-c101b35e8416', NULL, 'Dashboard', 'fa-gauge-high', '/', 1);
+INSERT INTO "default".c_module VALUES ('bc065026-bad1-4802-9858-e926686aaadf', NULL, 'App Management', 'fa-gear', '', 10);
+INSERT INTO "default".c_module VALUES ('ee1df381-b515-4ead-9bb1-fe8d765c9ce2', 'bc065026-bad1-4802-9858-e926686aaadf', 'Users', 'fa-users', '/users', 11);
+INSERT INTO "default".c_module VALUES ('2f6cc482-ffeb-46af-af7e-2407379bc059', 'bc065026-bad1-4802-9858-e926686aaadf', 'Groups', 'fa-user-group', '/groups', 12);
+INSERT INTO "default".c_module VALUES ('f5f969ea-a4bc-4517-8675-549a02d9bd70', 'bc065026-bad1-4802-9858-e926686aaadf', 'Modules', 'folder', '/modules', 13);
 
 
 --
 -- Data for Name: c_user; Type: TABLE DATA; Schema: default; Owner: postgres
 --
 
-COPY "default".c_user (user_id, username, user_password, user_full_name) FROM stdin;
-35f5b7ea-5395-41a2-a133-1b6f96dcc495	admin	$2a$11$JRZPATVf3hvr3nFKbdjT0.uzXtZPbSqjqv6x0fWiRScGN14bGZ.ZG	Admin
-\.
+INSERT INTO "default".c_user VALUES ('35f5b7ea-5395-41a2-a133-1b6f96dcc495', 'admin', '$2a$11$JRZPATVf3hvr3nFKbdjT0.uzXtZPbSqjqv6x0fWiRScGN14bGZ.ZG', 'Admin');
 
 
 --
 -- Data for Name: c_user_group; Type: TABLE DATA; Schema: default; Owner: postgres
 --
 
-COPY "default".c_user_group (user_id, group_id) FROM stdin;
-35f5b7ea-5395-41a2-a133-1b6f96dcc495	f24e5381-be99-4e61-8157-74e3f3097059
-\.
+INSERT INTO "default".c_user_group VALUES ('35f5b7ea-5395-41a2-a133-1b6f96dcc495', 'f24e5381-be99-4e61-8157-74e3f3097059');
 
 
 --
